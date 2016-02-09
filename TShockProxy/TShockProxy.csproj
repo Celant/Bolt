@@ -31,17 +31,27 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="DotNetty.Buffers">
+      <HintPath>..\External\DotNetty.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetty.Common">
+      <HintPath>..\External\DotNetty.Common.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TerrariaServer.cs" />
-    <Compile Include="Connection\ServerConnection.cs" />
-    <Compile Include="Connection\IConnection.cs" />
-    <Compile Include="Connection\IServer.cs" />
+    <Compile Include="Connection\ConnectionThread.cs" />
+    <Compile Include="Proxy\ProxiedPlayer.cs" />
+    <Compile Include="Protocol\Packets\DefinedPacket.cs" />
+    <Compile Include="Protocol\Packets\BasePacket.cs" />
+    <Compile Include="Protocol\Packets\Packet2Kick.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Connection\" />
+    <Folder Include="Proxy\" />
+    <Folder Include="Protocol\" />
+    <Folder Include="Protocol\Packets\" />
   </ItemGroup>
 </Project>

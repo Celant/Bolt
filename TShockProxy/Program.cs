@@ -1,105 +1,73 @@
-﻿using System;
+﻿//
+//  PacketWrapper.cs
+//
+//  Author:
+//       Josh Harris <celant@celantinteractive.com>
+//
+//  Copyright (c) 2016 Celant
+using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using TShockProxy.Connection;
+using TShockProxy.Proxy;
 
 namespace TShockProxy
 {
-	class MainClass
+	class TShockProxy
 	{
+        public static TShockProxy Instance;
+
+        public volatile bool IsRunning;
+
+        public List<ProxiedPlayer> Players = new List<ProxiedPlayer>();
+
+        private ConnectionThread Listener;
+
+        private Thread ListenerThread;
+
 		static void Main(string[] args)
 		{
-			try
-			{
-				int port = 50000;
-				IPAddress address = IPAddress.Loopback;
-				AsyncService service = new AsyncService(port, address);
-				service.Run();
-				Console.ReadLine();
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.Message);
-				Console.ReadLine();
-			}
-		}
-	}
+            Instance = new TShockProxy();
+            Console.WriteLine("TShockProxy by George has been initialised");
+            Console.WriteLine("Binding network ports");
 
-	public class AsyncService
-	{
-		private IPAddress ipAddress;
-		private int port;
+            Instance.Start();
 
-		public AsyncService(int port, IPAddress ipAddress)
-		{
-			this.port = port;
-			this.ipAddress = ipAddress;
-			if (this.ipAddress == null) {
-				throw new Exception ("No IPv4 address for server");
-			}
+            while (Instance.IsRunning)
+            {
+                string line = Console.ReadLine();
+                if (line != null)
+                {
+                    if (line.Equals("stop"))
+                    {
+                        Instance.Stop();
+                    }
+                }
+            }
 		}
 
-		public async void Run()
-		{
-			TcpListener listener = new TcpListener(this.ipAddress, this.port);
-			listener.Start();
-			Console.Write ("Array Min and Avg service is now running");
-			Console.WriteLine(" on " + this.ipAddress + ":" + this.port);
-			Console.WriteLine("Hit <enter> to stop service\n");
-			while (true) {
-				try {
-					TcpClient tcpClient = await listener.AcceptTcpClientAsync();
-					Task t = Process(tcpClient);
-					await t;
-				}
-					catch (Exception ex) {
-					Console.WriteLine(ex.Message);
-				}
-			}
-		}
+        public void Start() {
+            IsRunning = true;
 
-		private async Task Process(TcpClient tcpClient)
-		{
-			string clientEndPoint = tcpClient.Client.RemoteEndPoint.ToString();
-			Console.WriteLine("Received connection request from " + clientEndPoint);
-			try {
-				NetworkStream networkStream = tcpClient.GetStream();
-				StreamReader reader = new StreamReader(networkStream);
-				StreamWriter writer = new StreamWriter(networkStream);
-				writer.AutoFlush = true;
+            IPAddress Address = IPAddress.Parse("0.0.0.0");
+            IPEndPoint LocalEndpoint = new IPEndPoint(Address, 7777);
 
-				while (true) {
-					string request = await reader.ReadLineAsync();
-					if (request != null) {
-						Console.WriteLine("Received service request: " + request);
-						string response = Response(request);
-						Console.WriteLine("Computed response is: " + response + "\n");
-						await writer.WriteLineAsync(response);
-					} else {
-						break; // Client closed connection
-					}
-				}
-				tcpClient.Close();
-			}
-			catch (Exception ex) {
-				Console.WriteLine(ex.Message);
-				if (tcpClient.Connected) {
-					tcpClient.Close();
-				}
-			}
-		}
+            Listener = new ConnectionThread(LocalEndpoint);
+            ListenerThread = new Thread(Listener.Run);
 
-		private static string Response(string request) {
-			return "";
-		}
+            ListenerThread.Start();
+        }
 
-		private static double Average(double[] vals) {
-			return 0;
-		}
+        public void Stop() {
+            IsRunning = false;
 
-		private static double Minimum(double[] vals) {
-			return 0;
-		}
+            Console.WriteLine("Closing network ports");
+            Thread.Sleep(500);
+            Listener.socket.Close();
+            ListenerThread.Join();
+        }
 	}
 }
