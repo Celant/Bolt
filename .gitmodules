@@ -1,0 +1,3 @@
+[submodule "Multiplicity"]
+	path = Multiplicity
+	url = git@github.com:tylerjwatson/Multiplicity.git

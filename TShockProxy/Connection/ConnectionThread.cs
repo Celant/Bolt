@@ -52,10 +52,10 @@ namespace TShockProxy.Connection
             Socket listener = (Socket)ar.AsyncState;
             Socket handler = listener.EndAccept(ar);
 
-            ProxiedPlayer player = new ProxiedPlayer(handler);
+            InitialHandler player = new InitialHandler(handler);
             bool result = ThreadPool.QueueUserWorkItem(new WaitCallback(o => player.Run()));
             Console.WriteLine("{0} has connected", handler.RemoteEndPoint.ToString());
-            TShockProxy.Instance.Players.Add(player);
+            //TShockProxy.Instance.Players.Add("Player1", player);
             if (!result)
             {
                 Console.WriteLine("Failed to queue socket processor");

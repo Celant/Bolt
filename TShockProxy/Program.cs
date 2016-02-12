@@ -22,7 +22,7 @@ namespace TShockProxy
 
         public volatile bool IsRunning;
 
-        public List<ProxiedPlayer> Players = new List<ProxiedPlayer>();
+        public Dictionary<String, ClientConnection> Players = new Dictionary<String, ClientConnection>();
 
         private ConnectionThread Listener;
 
