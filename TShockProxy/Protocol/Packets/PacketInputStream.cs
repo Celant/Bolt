@@ -15,53 +15,86 @@ using System.Net.Sockets;
 
 namespace TShockProxy.Protocol.Packets
 {
+    struct TerrariaPacketHeader
+    {
+        public short length;
+        public PacketTypes type;
+
+        public bool IsValid()
+        {
+            return length > 0 && length < 0x7FFF;
+        }
+    }
+
     public class PacketInputStream
     {
-        private BinaryReader reader;
-        private TrackingInputStream tracker;
+        protected NetworkStream stream;
+        private const int kTerrariaPacketHeaderLength = 3;
 
         public PacketInputStream(NetworkStream stream)
         {
-            tracker = new TrackingInputStream(stream);
-            reader = new BinaryReader(tracker);
+            this.stream = stream;
         }
 
         public byte[] readPacket()
         {
-            tracker.Out.ResetReaderIndex();
-            tracker.Out.ResetWriterIndex();
+            byte[] stagingBuffer = new byte[kTerrariaPacketHeaderLength];
 
-            tracker.ReadByte();
-            tracker.ReadByte();
-            int id = tracker.ReadByte();
-            if (id == -1)
+            /*
+             * This method follows two principals:
+             * 
+             * - Waits indefinitely for three bytes in the network stream which makes up the terraria packet header
+             * - Verifies header, and reads n bytes from the strean according to the decoded packet length.
+             * 
+             * Note that the terraria packet length up to 65kB long, and includes the three header bytes.
+             */
+
+            int bytesRead = 0;
+
+            bytesRead = stream.Read(stagingBuffer, 0, kTerrariaPacketHeaderLength);
+            if (bytesRead != kTerrariaPacketHeaderLength)
             {
-                throw new EndOfStreamException();
-            }
-            if (! TerrariaPacket.deserializerMap.ContainsKey((PacketTypes)id))
-            {
-                throw new ArgumentException("No packet id: 0x" + id.ToString("X2"));
+                throw new Exception("Failed to read packet header from stream");
             }
 
-            return tracker.Out.ToArray();
+            TerrariaPacketHeader packetHeader = ParseHeader(stagingBuffer, 0);
+            if (packetHeader.IsValid() == false)
+            {
+                throw new Exception("Packet is invalid");
+            }
+
+            // Array needs to grow to accomodate the rest of the packet.
+            Array.Resize(ref stagingBuffer, packetHeader.length);
+
+            int pos = 0;
+
+            //The rest of the packet may require more than one read call.
+            //Loop read calls until all the bytes have been read from the
+            //stream into the buffer
+
+            do
+            {
+                pos += stream.Read(stagingBuffer, kTerrariaPacketHeaderLength + pos, packetHeader.length - kTerrariaPacketHeaderLength - pos);
+            } while (pos < packetHeader.length - kTerrariaPacketHeaderLength);
+
+            return stagingBuffer;
         }
 
-        private class TrackingInputStream : MemoryStream
+        private TerrariaPacketHeader ParseHeader(byte[] buffer, int offset)
         {
-            public IByteBuffer Out = Unpooled.Buffer();
-            private NetworkStream Wrapped;
+            TerrariaPacketHeader header = new TerrariaPacketHeader();
 
-            public TrackingInputStream(NetworkStream wrapped)
+            header.length = BitConverter.ToInt16(buffer, offset);
+
+            if (Enum.IsDefined(typeof(PacketTypes), (int)buffer[offset + 2]) == false)
             {
-                this.Wrapped = wrapped;
+                throw new Exception($"Packet type {buffer[offset + 2]:X2} is unknown");
             }
 
-            public override int ReadByte()
-            {
-                int Ret = Wrapped.ReadByte();
-                Out.WriteInt(Ret);
-                return Ret;
-            }
+            header.type = (PacketTypes)buffer[offset + 2];
+
+            return header;
         }
+
     }
 }

@@ -34,12 +34,16 @@ namespace TShockProxy.Proxy
             while (TShockProxy.Instance.IsRunning && Socket.Connected)
             {
                 byte[] packetBuf = input.readPacket();
-                Socket.
-                MemoryStream memStream = new MemoryStream(packetBuf);
-                BinaryReader reader = new BinaryReader(memStream);
-                TerrariaPacket packet = TerrariaPacket.Deserialize(reader);
-                Console.WriteLine(packet.ID);
-                ProcessPacket(packet);
+                
+                using (MemoryStream ms = new MemoryStream(packetBuf))
+                using (BinaryReader br = new BinaryReader(ms))
+                {
+                    TerrariaPacket packet = TerrariaPacket.Deserialize(br);
+                    Console.WriteLine(packet);
+                    ProcessPacket(packet);
+                }
+                
+                
             }
         }
 
