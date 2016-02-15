@@ -59,4 +59,10 @@
     <Folder Include="Protocol\" />
     <Folder Include="Protocol\Packets\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Multiplicity\LibMultiplicity\LibMultiplicity.csproj">
+      <Project>{3A9651DF-88A9-4C0B-B0E0-9B1EBA3F829F}</Project>
+      <Name>LibMultiplicity</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
