@@ -13,7 +13,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 
-namespace TShockProxy.Protocol.Packets
+namespace Bolt.Protocol
 {
     struct TerrariaPacketHeader
     {
@@ -54,7 +54,8 @@ namespace TShockProxy.Protocol.Packets
             bytesRead = stream.Read(stagingBuffer, 0, kTerrariaPacketHeaderLength);
             if (bytesRead != kTerrariaPacketHeaderLength)
             {
-                throw new Exception("Failed to read packet header from stream");
+                //throw new Exception("Failed to read packet header from stream");
+                return new byte[0];
             }
 
             TerrariaPacketHeader packetHeader = ParseHeader(stagingBuffer, 0);
@@ -86,9 +87,11 @@ namespace TShockProxy.Protocol.Packets
 
             header.length = BitConverter.ToInt16(buffer, offset);
 
-            if (Enum.IsDefined(typeof(PacketTypes), (int)buffer[offset + 2]) == false)
+            if (Enum.IsDefined(typeof(PacketTypes), buffer[offset + 2]) == false)
             {
                 throw new Exception($"Packet type {buffer[offset + 2]:X2} is unknown");
+                //header.length = 0;
+                //return header;
             }
 
             header.type = (PacketTypes)buffer[offset + 2];

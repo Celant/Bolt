@@ -13,16 +13,15 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using TShockProxy.Protocol.Packets;
-using TShockProxy.Connection;
+using Bolt.Protocol;
 
-namespace TShockProxy.Connection
+namespace Bolt.Connection
 {
     public class IConnection
     {
         protected Socket socket;
-        protected PacketInputStream input;
-        protected Stream output;
+        public PacketInputStream input;
+        public Stream output;
         public string username;
 
         public IConnection(Socket socket, PacketInputStream input, NetworkStream output) {
@@ -38,13 +37,13 @@ namespace TShockProxy.Connection
             try {
                 socket.Send(DisconnectPacket.ToArray());
             } catch (SocketException e) {
-                Console.Error.WriteLine(e.Message);
+                //Console.Error.WriteLine(e.Message);
             } finally {
                 try {
                     socket.Shutdown(SocketShutdown.Both);
                     socket.Close();
                 } catch (SocketException e) {
-                    Console.Error.WriteLine(e.Message);
+                    //Console.Error.WriteLine(e.Message);
                 }
             }
         }

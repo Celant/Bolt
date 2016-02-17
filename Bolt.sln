@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TShockProxy", "TShockProxy\TShockProxy.csproj", "{08F660CB-51BD-4008-99BE-84C0921555E5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibMultiplicity", "Multiplicity\LibMultiplicity\LibMultiplicity.csproj", "{3A9651DF-88A9-4C0B-B0E0-9B1EBA3F829F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bolt", "Bolt\Bolt.csproj", "{08F660CB-51BD-4008-99BE-84C0921555E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

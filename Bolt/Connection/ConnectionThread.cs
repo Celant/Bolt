@@ -10,9 +10,9 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using TShockProxy.Proxy;
+using Bolt.Proxy;
 
-namespace TShockProxy.Connection
+namespace Bolt.Connection
 {
     public class ConnectionThread
     {
@@ -30,7 +30,7 @@ namespace TShockProxy.Connection
 
         public void Run()
         {
-            while (TShockProxy.Instance.IsRunning)
+            while (Bolt.Instance.IsRunning)
             {
                 try {
                     ConnectionAccepted.Reset();

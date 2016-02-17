@@ -11,18 +11,18 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using TShockProxy.Connection;
-using TShockProxy.Proxy;
+using Bolt.Connection;
+using Bolt.Proxy;
 
-namespace TShockProxy
+namespace Bolt
 {
-	class TShockProxy
+	class Bolt
 	{
-        public static TShockProxy Instance;
+        public static Bolt Instance;
 
         public volatile bool IsRunning;
 
-        public Dictionary<String, ClientConnection> Players = new Dictionary<String, ClientConnection>();
+        public List<ClientConnection> Players = new List<ClientConnection>();
 
         private ConnectionThread Listener;
 
@@ -30,9 +30,9 @@ namespace TShockProxy
 
 		static void Main(string[] args)
 		{
-            Instance = new TShockProxy();
-            Console.WriteLine("TShockProxy by George has been initialised");
-            Console.WriteLine("Binding network ports");
+            Instance = new Bolt();
+            Console.WriteLine("Bolt by George has been initialised");
+            Console.WriteLine("Starting up networking server");
 
             Instance.Start();
 

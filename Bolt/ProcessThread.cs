@@ -7,7 +7,7 @@
 //  Copyright (c) 2016 Celant
 using System;
 
-namespace TShockProxy
+namespace Bolt
 {
     public abstract class ProcessThread
     {
