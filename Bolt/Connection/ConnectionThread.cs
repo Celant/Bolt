@@ -39,7 +39,7 @@ namespace Bolt.Connection
                     socket.BeginAccept(new AsyncCallback(AcceptCallback), socket);
 
                     ConnectionAccepted.WaitOne();
-                } catch (Exception e) {
+                } catch (System.Exception e) {
                     Console.WriteLine(e.Message);
                 }
             }

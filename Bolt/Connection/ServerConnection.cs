@@ -13,10 +13,11 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using Bolt.Protocol;
+using Bolt.Exception;
 
 namespace Bolt.Connection
 {
-    public class ServerConnection : IConnection
+    public class ServerConnection : GenericConnection
     {
         public ServerConnection(Socket socket, PacketInputStream input, NetworkStream output) : base(socket, input, output)
         {
@@ -25,6 +26,7 @@ namespace Bolt.Connection
         // , LibMultiplicity.Packets.v1302.PlayerInfo playerInfo, LibMultiplicity.Packets.v1241.PlayerHP playerHp, LibMultiplicity.Packets.v1241.PlayerMana playerMana
         public static ServerConnection connect(IPEndPoint address, LoginQueue loginQueue)
         {
+            try {
             Console.WriteLine("[Bolt] Opening connection to target server");
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Connect(address);
@@ -80,6 +82,10 @@ namespace Bolt.Connection
             }
 
             return new ServerConnection(socket, input, output);
+            } catch (SocketException e) {
+                Console.WriteLine(e);
+                throw new KickException("[Bolt] Failed to connect to target server");
+            }
         }
     }
 }

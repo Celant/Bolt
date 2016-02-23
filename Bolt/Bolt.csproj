@@ -6,7 +6,7 @@
     <ProjectGuid>{08F660CB-51BD-4008-99BE-84C0921555E5}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Bolt</RootNamespace>
-    <AssemblyName>TShockProxy</AssemblyName>
+    <AssemblyName>Bolt</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -42,19 +42,21 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Connection\ConnectionThread.cs" />
-    <Compile Include="Connection\IConnection.cs" />
     <Compile Include="Connection\ServerConnection.cs" />
     <Compile Include="Connection\ClientConnection.cs" />
     <Compile Include="ProcessThread.cs" />
     <Compile Include="Proxy\InitialHandler.cs" />
     <Compile Include="Protocol\PacketInputStream.cs" />
     <Compile Include="Protocol\LoginQueue.cs" />
+    <Compile Include="Exception\KickException.cs" />
+    <Compile Include="Connection\GenericConnection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Connection\" />
     <Folder Include="Proxy\" />
     <Folder Include="Protocol\" />
+    <Folder Include="Exception\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Multiplicity\LibMultiplicity\LibMultiplicity.csproj">

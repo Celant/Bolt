@@ -13,10 +13,11 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using Bolt.Protocol;
+using Bolt.Exception;
 
 namespace Bolt.Connection
 {
-    public class ClientConnection : IConnection
+    public class ClientConnection : GenericConnection
     {
         public LoginQueue loginQueue;
         public ServerConnection CurrentServer;
@@ -35,26 +36,32 @@ namespace Bolt.Connection
         }
 
         public void Connect(IPEndPoint address) {
-            ServerConnection NewServer = ServerConnection.connect(address, loginQueue);
-            if (CurrentServer == null) {
-                upstreamBridge = new UpstreamBridge(this);
-                upstreamBridgeThread = new Thread(upstreamBridge.Run);
-                upstreamBridgeThread.Start();
-            }
-            if (downstreamBridge != null) {
-                downstreamBridge.Interrupt();
-                downstreamBridgeThread.Join();
-            }
-            downstreamBridge = new DownstreamBridge(this);
-            downstreamBridgeThread = new Thread(downstreamBridge.Run);
-            CurrentServer = NewServer;
-            downstreamBridgeThread.Start();
+            try {
+                ServerConnection NewServer = ServerConnection.connect(address, loginQueue);
+                if (CurrentServer == null) {
+                    upstreamBridge = new UpstreamBridge(this);
+                    upstreamBridgeThread = new Thread(upstreamBridge.Run);
+                    upstreamBridgeThread.Start();
+                }
+                if (downstreamBridge != null) {
+                    downstreamBridge.Interrupt();
+                    downstreamBridgeThread.Join();
+                }
+                downstreamBridge = new DownstreamBridge(this);
+                downstreamBridgeThread = new Thread(downstreamBridge.Run);
+                CurrentServer = NewServer;
+                downstreamBridgeThread.Start();
 
-            ContinueConnecting2 continueConnecting2 = new ContinueConnecting2();
-            Console.WriteLine(continueConnecting2);
-            byte[] buf = continueConnecting2.ToArray();
-            Console.WriteLine(continueConnecting2.ID);
-            CurrentServer.output.Write(buf, 0, buf.Length);
+                ContinueConnecting2 continueConnecting2 = new ContinueConnecting2();
+                Console.WriteLine(continueConnecting2);
+                byte[] buf = continueConnecting2.ToArray();
+                Console.WriteLine(continueConnecting2.ID);
+                CurrentServer.output.Write(buf, 0, buf.Length);
+            } catch (KickException e) {
+                Disconnect disconnectPacket = new Disconnect(e.Message);
+                byte[] buffer = disconnectPacket.ToArray();
+                output.Write(buffer, 0, buffer.Length);
+            }
         }
 
         public void Register() {
@@ -102,7 +109,7 @@ namespace Bolt.Connection
                 } catch (EndOfStreamException e) {
                     Console.WriteLine("Reached end of stream");
                     Console.WriteLine(e.Message);
-                } catch (Exception e) {
+                } catch (System.Exception e) {
                     Console.WriteLine(e.Message);
                 }
             }
@@ -127,7 +134,7 @@ namespace Bolt.Connection
                 } catch (EndOfStreamException e) {
                     Console.WriteLine("Reached end of stream");
                     Console.WriteLine(e.Message);
-                } catch (Exception e) {
+                } catch (System.Exception e) {
                     Console.WriteLine(e.Message);
                 }
             }

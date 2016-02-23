@@ -17,14 +17,14 @@ using Bolt.Protocol;
 
 namespace Bolt.Connection
 {
-    public class IConnection
+    public class GenericConnection
     {
-        protected Socket socket;
+        public Socket socket;
         public PacketInputStream input;
         public Stream output;
         public string username;
 
-        public IConnection(Socket socket, PacketInputStream input, NetworkStream output) {
+        public GenericConnection(Socket socket, PacketInputStream input, NetworkStream output) {
             this.socket = socket;
             this.input = input;
             this.output = output;

@@ -61,8 +61,9 @@ namespace Bolt.Protocol
             TerrariaPacketHeader packetHeader = ParseHeader(stagingBuffer, 0);
             if (packetHeader.IsValid() == false)
             {
-                throw new Exception("Packet is invalid");
+                Console.WriteLine("[Bolt] Packet is invalid");
             }
+            Console.WriteLine(packetHeader.type);
 
             // Array needs to grow to accomodate the rest of the packet.
             Array.Resize(ref stagingBuffer, packetHeader.length);
@@ -89,7 +90,7 @@ namespace Bolt.Protocol
 
             if (Enum.IsDefined(typeof(PacketTypes), buffer[offset + 2]) == false)
             {
-                throw new Exception($"Packet type {buffer[offset + 2]:X2} is unknown");
+                throw new System.Exception($"Packet type {buffer[offset + 2]:X2} is unknown");
                 //header.length = 0;
                 //return header;
             }
