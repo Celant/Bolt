@@ -14,6 +14,7 @@ using System.Net.Sockets;
 using System.Threading;
 using Bolt.Protocol;
 using Bolt.Exception;
+using Bolt.Proxy;
 
 namespace Bolt.Connection
 {
@@ -22,16 +23,20 @@ namespace Bolt.Connection
         public LoginQueue loginQueue;
         public ServerConnection CurrentServer;
 
+        public NATManager TranslationManager;
+
         private UpstreamBridge upstreamBridge;
         private Thread upstreamBridgeThread;
 
         private DownstreamBridge downstreamBridge;
         private Thread downstreamBridgeThread;
 
-        public ClientConnection(Socket socket, PacketInputStream input, NetworkStream output, LoginQueue loginQueue) : base(socket, input, output)
+        public ClientConnection(Socket socket, PacketInputStream input, NetworkStream output, LoginQueue loginQueue, NATManager translationManager)
+            : base(socket, input, output)
         {
             this.loginQueue = loginQueue;
             username = this.loginQueue.playerInfo.Name;
+            this.TranslationManager = translationManager;
             Console.WriteLine("User {0} has connected to slot {1}", username, loginQueue.playerInfo.PlayerID);
         }
 
@@ -64,14 +69,14 @@ namespace Bolt.Connection
             }
         }
 
-        public void Register() {
-            Bolt.Instance.Players.Add(this);
+        public void Register(int slot) {
+            Bolt.Instance.Players[slot] = this;
         }
 
         private void Destroy(string reason) {
             if (Bolt.Instance.IsRunning)
             {
-                Bolt.Instance.Players.Remove(this);
+                Bolt.Instance.Players[0];
             }
             if (upstreamBridge != null)
             {
@@ -87,56 +92,6 @@ namespace Bolt.Connection
             if (CurrentServer != null)
             {
                 CurrentServer.Disconnect("Quitting");
-            }
-        }
-    }
-
-    public class UpstreamBridge : ProcessThread
-    {
-        protected ClientConnection clientConnection;
-
-        public UpstreamBridge(ClientConnection parent)
-        {
-            this.clientConnection = parent;
-        }
-
-        public override void Run() {
-            while (!Interrupted())
-            {
-                try {
-                    byte[] packet = clientConnection.input.readPacket();
-                    clientConnection.CurrentServer.output.Write(packet, 0, packet.Length);
-                } catch (EndOfStreamException e) {
-                    Console.WriteLine("Reached end of stream");
-                    Console.WriteLine(e.Message);
-                } catch (System.Exception e) {
-                    Console.WriteLine(e.Message);
-                }
-            }
-        }
-    }
-
-    public class DownstreamBridge : ProcessThread
-    {
-        protected ClientConnection clientConnection;
-
-        public DownstreamBridge(ClientConnection parent)
-        {
-            this.clientConnection = parent;
-        }
-
-        public override void Run() {
-            while (!Interrupted())
-            {
-                try {
-                    byte[] packet = clientConnection.CurrentServer.input.readPacket();
-                    clientConnection.output.Write(packet, 0, packet.Length);
-                } catch (EndOfStreamException e) {
-                    Console.WriteLine("Reached end of stream");
-                    Console.WriteLine(e.Message);
-                } catch (System.Exception e) {
-                    Console.WriteLine(e.Message);
-                }
             }
         }
     }

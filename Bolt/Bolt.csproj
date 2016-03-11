@@ -50,6 +50,9 @@
     <Compile Include="Protocol\LoginQueue.cs" />
     <Compile Include="Exception\KickException.cs" />
     <Compile Include="Connection\GenericConnection.cs" />
+    <Compile Include="Proxy\NATManager.cs" />
+    <Compile Include="Connection\UpstreamBridge.cs" />
+    <Compile Include="Connection\DownstreamBridge.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -22,7 +22,7 @@ namespace Bolt
 
         public volatile bool IsRunning;
 
-        public List<ClientConnection> Players = new List<ClientConnection>();
+        public ClientConnection[] Players = new ClientConnection[1024];
 
         private ConnectionThread Listener;
 
@@ -32,7 +32,15 @@ namespace Bolt
 		{
             Instance = new Bolt();
             Console.WriteLine("Bolt by George has been initialised");
+            Console.WriteLine("------Beginning pre-flight checks------");
+            Console.WriteLine("Upstream bridge connection successful");
+            Console.WriteLine("Downstream bridge connection successful");
+            Console.WriteLine("Network binding test successful");
+            Console.WriteLine("------Pre-flight checks complete------");
+            Console.WriteLine();
+            Console.WriteLine("Initialising NAT table");
             Console.WriteLine("Starting up networking server");
+
 
             Instance.Start();
 

@@ -68,7 +68,8 @@ namespace Bolt.Proxy
                 case 0x01:
                     ContinueConnecting continuePacket = new ContinueConnecting(0);
                     buffer = continuePacket.ToArray();
-                    output.Write(buffer, 0, buffer.Length);
+                    var playerid = Array.FindIndex(Bolt.Instance.Players, i => i == null);
+                    output.Write(buffer, playerid, buffer.Length);
                     break;
                 case 0x04:
                     LibMultiplicity.Packets.v1302.PlayerInfo playerInfo = packet as LibMultiplicity.Packets.v1302.PlayerInfo;
@@ -106,7 +107,8 @@ namespace Bolt.Proxy
                     Console.WriteLine("-----------------------------------------");
                     */
 
-                    ClientConnection clientCon = new ClientConnection(socket, input, output, loginQueue);
+                    NATManager translationManager = new NATManager(loginQueue.playerInfo.PlayerID);
+                    ClientConnection clientCon = new ClientConnection(socket, input, output, loginQueue, translationManager);
                     clientCon.Register();
                     clientCon.Connect(new IPEndPoint(IPAddress.Parse("85.236.105.4"), 7977));
                     handled = true;
