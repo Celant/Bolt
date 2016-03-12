@@ -67,6 +67,15 @@ namespace Bolt.Proxy
             {
                 return new byte[0];
             }
+            if (translatedPacket != packet.ToArray())
+            {
+                //Console.WriteLine("[Bolt] Translated packet {0}", packet.ID);
+                //Console.WriteLine("[Bolt] From ID: {0}, to ID: {1}", ServerPlayerID, ProxyPlayerID);
+            }
+            else
+            {
+                //Console.WriteLine("[Bolt] Packet ID: {0} did not need translating", packet.ID);
+            }
             return translatedPacket;
         }
 
@@ -76,6 +85,15 @@ namespace Bolt.Proxy
             if (translatedPacket.Length <= 0)
             {
                 return new byte[0];
+            }
+            if (translatedPacket != packet.ToArray())
+            {
+                Console.WriteLine("[Bolt] Translated packet {0}", packet.ID);
+                Console.WriteLine("[Bolt] From ID: {0}, to ID: {1}", ProxyPlayerID, ServerPlayerID);
+            }
+            else
+            {
+                Console.WriteLine("[Bolt] Packet ID: {0} did not need translating", packet.ID);
             }
             return translatedPacket;
         }

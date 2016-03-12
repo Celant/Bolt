@@ -74,10 +74,11 @@ namespace Bolt.Connection
             Bolt.Instance.Players[slot] = this;
         }
 
-        private void Destroy(string reason) {
+        public void Destroy(string reason) {
             if (Bolt.Instance.IsRunning)
             {
                 Bolt.Instance.Players[TranslationManager.ProxyPlayerID] = null;
+                Console.WriteLine("[Bolt] Dropped player {0}: {1}", TranslationManager.ProxyPlayerID, reason);
             }
             if (upstreamBridge != null)
             {
@@ -92,7 +93,7 @@ namespace Bolt.Connection
             Disconnect(reason);
             if (CurrentServer != null)
             {
-                CurrentServer.Disconnect("Quitting");
+                CurrentServer.Disconnect(reason);
             }
         }
     }

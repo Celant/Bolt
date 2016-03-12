@@ -8,6 +8,7 @@
 using Bolt.Proxy;
 using System;
 using System.IO;
+using System.Net.Sockets;
 
 namespace Bolt.Connection
 {
@@ -30,10 +31,11 @@ namespace Bolt.Connection
                     packet = TranslationManager.ProccessPacket(packet, TranslationType.Upstream);
                     conn.CurrentServer.output.Write(packet, 0, packet.Length);
                 } catch (EndOfStreamException e) {
-                    Console.WriteLine("Reached end of stream");
-                    Console.WriteLine(e.Message);
-                } catch (System.Exception e) {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine("[Bolt] [Upstream] {0}", e.Message);
+                    conn.Destroy("Reached end of stream");
+                    Interrupt();
+                } catch (SocketException e) {
+                    Console.WriteLine("[Bolt] Failed on Upstream Bridge. Error: {0}", e.Message);
                 }
             }
         }
