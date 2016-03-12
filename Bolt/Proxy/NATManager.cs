@@ -166,19 +166,30 @@ namespace Bolt.Proxy
                     return playerKillMe.ToArray();
                 case (byte) PacketTypes.PlayerTeam:
                     v1241.PlayerTeam playerTeam = packet as v1241.PlayerTeam;
-                    playerTeam.PlayerID = CheckPlayerID(playerTeam, fromPlayerId, toPlayerId);
+                    playerTeam.PlayerID = CheckPlayerID(playerTeam.PlayerID, fromPlayerId, toPlayerId);
                     return playerTeam.ToArray();
                 case (byte) PacketTypes.SignRead:
-                    break;
+                    v1308.SignRead signRead = packet as v1308.SignRead;
+                    signRead.PlayerID = CheckPlayerID(signRead.PlayerID, fromPlayerId, toPlayerId);
+                    return signRead.ToArray();
                 case (byte) PacketTypes.PlayerBuff:
-                    break;
+                    v1241.PlayerBuffs playerBuff = packet as v1241.PlayerBuffs;
+                    playerBuff.PlayerID = CheckPlayerID(playerBuff.PlayerID, fromPlayerId, toPlayerId);
+                    return playerBuff.ToArray();
                 case (byte) PacketTypes.NpcSpecial:
-                    break;
+                    v1308.NpcSpecial npcSpecial = packet as v1308.NpcSpecial;
+                    npcSpecial.PlayerID = CheckPlayerID(npcSpecial.PlayerID, fromPlayerId, toPlayerId);
+                    return npcSpecial.ToArray();
                 case (byte) PacketTypes.PlayerAddBuff:
-                    break;
+                    v1241.PlayerAddBuff playerAddBuff = packet as v1241.PlayerAddBuff;
+                    playerAddBuff.PlayerID = CheckPlayerID(playerAddBuff.PlayerID, fromPlayerId, toPlayerId);
+                    return playerAddBuff.ToArray();
                 case (byte) PacketTypes.PlayHarp:
-                    break;
+                    v1308.PlayMusicItem playMusicItem = packet as v1308.PlayMusicItem;
+                    playMusicItem.PlayerID = CheckPlayerID(playMusicItem.PlayerID, fromPlayerId, toPlayerId);
+                    return playMusicItem.ToArray();
                 case (byte) PacketTypes.SpawnBossorInvasion:
+                    v1308.
                     break;
                 case (byte) PacketTypes.PlayerDodge:
                     break;
