@@ -14,12 +14,12 @@ namespace Bolt.Connection
     public class UpstreamBridge : ProcessThread
     {
         protected ClientConnection conn;
-        protected NATManager NatManager;
+        protected NATManager TranslationManager;
 
         public UpstreamBridge(ClientConnection parent)
         {
             this.conn = parent;
-            this.NatManager = Bolt.Instance.NatManager;
+            this.TranslationManager = conn.TranslationManager;
         }
 
         public override void Run() {
@@ -27,7 +27,7 @@ namespace Bolt.Connection
             {
                 try {
                     byte[] packet = conn.input.readPacket();
-                    packet = NatManager.ProccessPacket(packet, TranslationType.Upstream);
+                    packet = TranslationManager.ProccessPacket(packet, TranslationType.Upstream);
                     conn.CurrentServer.output.Write(packet, 0, packet.Length);
                 } catch (EndOfStreamException e) {
                     Console.WriteLine("Reached end of stream");

@@ -109,7 +109,7 @@ namespace Bolt.Proxy
 
                     NATManager translationManager = new NATManager(loginQueue.playerInfo.PlayerID);
                     ClientConnection clientCon = new ClientConnection(socket, input, output, loginQueue, translationManager);
-                    clientCon.Register();
+                    clientCon.Register(loginQueue.playerInfo.PlayerID);
                     clientCon.Connect(new IPEndPoint(IPAddress.Parse("85.236.105.4"), 7977));
                     handled = true;
                     break;

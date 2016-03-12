@@ -43,6 +43,7 @@ namespace Bolt.Connection
         public void Connect(IPEndPoint address) {
             try {
                 ServerConnection NewServer = ServerConnection.connect(address, loginQueue);
+                TranslationManager.ServerPlayerID = NewServer.ServerPlayerID;
                 if (CurrentServer == null) {
                     upstreamBridge = new UpstreamBridge(this);
                     upstreamBridgeThread = new Thread(upstreamBridge.Run);
@@ -76,7 +77,7 @@ namespace Bolt.Connection
         private void Destroy(string reason) {
             if (Bolt.Instance.IsRunning)
             {
-                Bolt.Instance.Players[0];
+                Bolt.Instance.Players[TranslationManager.ProxyPlayerID] = null;
             }
             if (upstreamBridge != null)
             {
