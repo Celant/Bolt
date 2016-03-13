@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Bolt.Proxy
 {
@@ -63,18 +64,19 @@ namespace Bolt.Proxy
         private byte[] TranslatePacketUpstream(TerrariaPacket packet)
         {
             byte[] translatedPacket = TranslatePacket(packet, ServerPlayerID, ProxyPlayerID);
+            byte[] originalPacket = packet.ToArray();
             if (translatedPacket.Length <= 0)
             {
                 return new byte[0];
             }
-            if (translatedPacket != packet.ToArray())
+            if (!translatedPacket.SequenceEqual(originalPacket))
             {
-                //Console.WriteLine("[Bolt] Translated packet {0}", packet.ID);
-                //Console.WriteLine("[Bolt] From ID: {0}, to ID: {1}", ServerPlayerID, ProxyPlayerID);
+                Console.WriteLine("[Bolt] [Upstream] Translated packet {0}", packet.ID);
+                Console.WriteLine("[Bolt] [Upstream] From ID: {0}, to ID: {1}", ServerPlayerID, ProxyPlayerID);
             }
             else
             {
-                //Console.WriteLine("[Bolt] Packet ID: {0} did not need translating", packet.ID);
+                Console.WriteLine("[Bolt] [Upstream] Packet ID: {0} did not need translating", packet.ID);
             }
             return translatedPacket;
         }
@@ -82,18 +84,19 @@ namespace Bolt.Proxy
         private byte[] TranslatePacketDownstream(TerrariaPacket packet)
         {
             byte[] translatedPacket = TranslatePacket(packet, ProxyPlayerID, ServerPlayerID);
+            byte[] originalPacket = packet.ToArray();
             if (translatedPacket.Length <= 0)
             {
                 return new byte[0];
             }
-            if (translatedPacket != packet.ToArray())
+            if (!translatedPacket.SequenceEqual(originalPacket))
             {
-                Console.WriteLine("[Bolt] Translated packet {0}", packet.ID);
-                Console.WriteLine("[Bolt] From ID: {0}, to ID: {1}", ProxyPlayerID, ServerPlayerID);
+                Console.WriteLine("[Bolt] [Downstream] Translated packet {0}", packet.ID);
+                Console.WriteLine("[Bolt] [Downstream] From ID: {0}, to ID: {1}", ProxyPlayerID, ServerPlayerID);
             }
             else
             {
-                Console.WriteLine("[Bolt] Packet ID: {0} did not need translating", packet.ID);
+                Console.WriteLine("[Bolt] [Downstream] Packet ID: {0} did not need translating", packet.ID);
             }
             return translatedPacket;
         }

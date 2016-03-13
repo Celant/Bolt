@@ -6,11 +6,13 @@
 //
 //  Copyright (c) 2016 Celant
 using System;
+using System.Threading;
 
 namespace Bolt
 {
     public abstract class ProcessThread
     {
+
         private bool _interrupted = false;
 
         public bool Interrupted() 

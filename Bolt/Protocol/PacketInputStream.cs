@@ -31,6 +31,8 @@ namespace Bolt.Protocol
         protected NetworkStream stream;
         private const int kTerrariaPacketHeaderLength = 3;
 
+        private byte[] lastBuffer;
+
         public PacketInputStream(NetworkStream stream)
         {
             this.stream = stream;
@@ -54,7 +56,7 @@ namespace Bolt.Protocol
             bytesRead = stream.Read(stagingBuffer, 0, kTerrariaPacketHeaderLength);
             if (bytesRead != kTerrariaPacketHeaderLength)
             {
-                //throw new Exception("Failed to read packet header from stream");
+                //throw new System.Exception("Failed to read packet header from stream");
                 return new byte[0];
             }
 
@@ -79,6 +81,7 @@ namespace Bolt.Protocol
                 pos += stream.Read(stagingBuffer, kTerrariaPacketHeaderLength + pos, packetHeader.length - kTerrariaPacketHeaderLength - pos);
             } while (pos < packetHeader.length - kTerrariaPacketHeaderLength);
 
+            lastBuffer = stagingBuffer;
             return stagingBuffer;
         }
 

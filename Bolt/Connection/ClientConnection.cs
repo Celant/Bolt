@@ -37,7 +37,7 @@ namespace Bolt.Connection
             this.loginQueue = loginQueue;
             username = this.loginQueue.playerInfo.Name;
             this.TranslationManager = translationManager;
-            Console.WriteLine("User {0} has connected to slot {1}", username, loginQueue.playerInfo.PlayerID);
+            Console.WriteLine("[Bolt] [ClientConnection] User {0} has connected to slot {1}", username, loginQueue.playerInfo.PlayerID);
         }
 
         public void Connect(IPEndPoint address) {
@@ -47,6 +47,7 @@ namespace Bolt.Connection
                 if (CurrentServer == null) {
                     upstreamBridge = new UpstreamBridge(this);
                     upstreamBridgeThread = new Thread(upstreamBridge.Run);
+                    upstreamBridgeThread.Name = "UpstreamBridge-" + TranslationManager.ProxyPlayerID;
                     upstreamBridgeThread.Start();
                 }
                 if (downstreamBridge != null) {
@@ -55,13 +56,13 @@ namespace Bolt.Connection
                 }
                 downstreamBridge = new DownstreamBridge(this);
                 downstreamBridgeThread = new Thread(downstreamBridge.Run);
+                downstreamBridgeThread.Name = "DownstreamBridge-" + TranslationManager.ProxyPlayerID;
                 CurrentServer = NewServer;
                 downstreamBridgeThread.Start();
 
                 ContinueConnecting2 continueConnecting2 = new ContinueConnecting2();
                 Console.WriteLine(continueConnecting2);
                 byte[] buf = continueConnecting2.ToArray();
-                Console.WriteLine(continueConnecting2.ID);
                 CurrentServer.output.Write(buf, 0, buf.Length);
             } catch (KickException e) {
                 Disconnect disconnectPacket = new Disconnect(e.Message);
@@ -78,7 +79,7 @@ namespace Bolt.Connection
             if (Bolt.Instance.IsRunning)
             {
                 Bolt.Instance.Players[TranslationManager.ProxyPlayerID] = null;
-                Console.WriteLine("[Bolt] Dropped player {0}: {1}", TranslationManager.ProxyPlayerID, reason);
+                Console.WriteLine("[Bolt] [ClientConnection] Dropped player {0}: {1}", TranslationManager.ProxyPlayerID, reason);
             }
             if (upstreamBridge != null)
             {

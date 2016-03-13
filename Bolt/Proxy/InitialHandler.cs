@@ -66,9 +66,10 @@ namespace Bolt.Proxy
             switch (packet.ID)
             {
                 case 0x01:
-                    ContinueConnecting continuePacket = new ContinueConnecting(0);
-                    buffer = continuePacket.ToArray();
                     var playerid = Array.FindIndex(Bolt.Instance.Players, i => i == null);
+                    ContinueConnecting continuePacket = new ContinueConnecting(0);
+                    continuePacket.PlayerID = (byte) playerid;
+                    buffer = continuePacket.ToArray();
                     output.Write(buffer, playerid, buffer.Length);
                     break;
                 case 0x04:
