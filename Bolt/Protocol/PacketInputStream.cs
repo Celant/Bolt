@@ -67,6 +67,14 @@ namespace Bolt.Protocol
             }
             Console.WriteLine(packetHeader.type);
 
+            if (packetHeader.length - kTerrariaPacketHeaderLength == 0)
+            {
+                /*
+                 * If there is no packet payload then skip the rest of the read calls.
+                 */
+                return stagingBuffer;
+            }
+
             // Array needs to grow to accomodate the rest of the packet.
             Array.Resize(ref stagingBuffer, packetHeader.length);
 

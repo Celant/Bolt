@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -55,15 +55,10 @@
     <Compile Include="Connection\DownstreamBridge.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <Folder Include="Connection\" />
-    <Folder Include="Proxy\" />
-    <Folder Include="Protocol\" />
-    <Folder Include="Exception\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Multiplicity\LibMultiplicity\LibMultiplicity.csproj">
-      <Project>{3A9651DF-88A9-4C0B-B0E0-9B1EBA3F829F}</Project>
+      <Project>{3a9651df-88a9-4c0b-b0e0-9b1eba3f829f}</Project>
       <Name>LibMultiplicity</Name>
     </ProjectReference>
   </ItemGroup>
