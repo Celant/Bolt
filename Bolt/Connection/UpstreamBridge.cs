@@ -6,9 +6,7 @@
 //
 //  Copyright (c) 2016 Celant
 using Bolt.Proxy;
-using LibMultiplicity;
-using LibMultiplicity.Packets;
-using LibMultiplicity.Packets.v1241;
+using Multiplicity.Packets;
 using System;
 using System.IO;
 using System.Net.Sockets;

@@ -5,10 +5,7 @@
 //       Josh Harris <celant@celantinteractive.com>
 //
 //  Copyright (c) 2016 Celant
-using DotNetty.Buffers;
-using LibMultiplicity;
-using LibMultiplicity.Packets.v1241;
-using LibMultiplicity.Packets.v1302;
+using Multiplicity.Packets;
 using System;
 using System.Collections.Generic;
 using System.Linq;

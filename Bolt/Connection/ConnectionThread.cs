@@ -5,7 +5,6 @@
 //       Josh Harris <celant@celantinteractive.com>
 //
 //  Copyright (c) 2016 Celant
-using DotNetty.Buffers;
 using System;
 using System.Net;
 using System.Net.Sockets;

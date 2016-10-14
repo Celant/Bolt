@@ -4,12 +4,8 @@
 //  Author:
 //       Josh Harris <celant@celantinteractive.com>
 //
-//  Copyright (c) 2016 Celant
-using LibMultiplicity;
-using LibMultiplicity.Packets;
-using v1241 = LibMultiplicity.Packets.v1241;
-using v1302 = LibMultiplicity.Packets.v1302;
-using v1308 = LibMultiplicity.Packets.v1308;
+//  Copyright (c) 2016 Cela
+using Multiplicity.Packets;
 using System;
 using System.Collections.Generic;
 using System.IO;

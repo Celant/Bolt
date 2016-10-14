@@ -31,11 +31,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="DotNetty.Buffers">
-      <HintPath>..\External\DotNetty.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetty.Common">
-      <HintPath>..\External\DotNetty.Common.dll</HintPath>
+    <Reference Include="Multiplicity.Packets">
+      <HintPath>..\packages\Multiplicity.Packets.1.2.5\lib\net45\Multiplicity.Packets.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -61,5 +58,8 @@
       <Project>{3a9651df-88a9-4c0b-b0e0-9b1eba3f829f}</Project>
       <Name>LibMultiplicity</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

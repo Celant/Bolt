@@ -5,8 +5,7 @@
 //       Josh Harris <celant@celantinteractive.com>
 //
 //  Copyright (c) 2016 Celant
-using LibMultiplicity.Packets.v1241;
-using LibMultiplicity.Packets.v1302;
+using Multiplicity.Packets;
 using System;
 using System.IO;
 using System.Net;

@@ -5,9 +5,7 @@
 //       Josh Harris <celant@celantinteractive.com>
 //
 //  Copyright (c) 2016 Celant
-using LibMultiplicity;
-using v1242 = LibMultiplicity.Packets.v1241;
-using v1302 = LibMultiplicity.Packets.v1302;
+using Multiplicity.Packets;
 using System;
 using System.IO;
 using System.Net;
@@ -41,7 +39,7 @@ namespace Bolt.Connection
 
                 byte serverPlayerID;
 
-                v1242.ConnectRequest connRequest = new v1242.ConnectRequest("Terraria156"); 
+                ConnectRequest connRequest = new ConnectRequest("Terraria156"); 
                 buffer = connRequest.ToArray();
                 output.Write(buffer, 0, buffer.Length);
                 Console.WriteLine(connRequest);
@@ -55,7 +53,7 @@ namespace Bolt.Connection
                     {
                         throw new ProtocolViolationException("Connection was refused to the target server");
                     }
-                    v1242.ContinueConnecting continueConnecting = packet as v1242.ContinueConnecting;
+                    ContinueConnecting continueConnecting = packet as ContinueConnecting;
                     serverPlayerID = continueConnecting.PlayerID;
                     Console.WriteLine("[Bolt] Target server accepted connection as Player {0}", serverPlayerID);
                 }
@@ -78,7 +76,7 @@ namespace Bolt.Connection
 
                 buffer = new byte[0];
 
-                foreach (v1242.PlayerInventorySlot slot in loginQueue.playerSlot)
+                foreach (PlayerInventorySlot slot in loginQueue.playerSlot)
                 {
                     byte[] partbuffer = slot.ToArray();
                     Array.Resize(ref buffer, buffer.Length + partbuffer.Length);

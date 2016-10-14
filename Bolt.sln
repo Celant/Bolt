@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibMultiplicity", "Multiplicity\LibMultiplicity\LibMultiplicity.csproj", "{3A9651DF-88A9-4C0B-B0E0-9B1EBA3F829F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bolt", "Bolt\Bolt.csproj", "{08F660CB-51BD-4008-99BE-84C0921555E5}"
 EndProject
 Global
@@ -15,10 +13,6 @@ Global
 		{08F660CB-51BD-4008-99BE-84C0921555E5}.Debug|x86.Build.0 = Debug|x86
 		{08F660CB-51BD-4008-99BE-84C0921555E5}.Release|x86.ActiveCfg = Release|x86
 		{08F660CB-51BD-4008-99BE-84C0921555E5}.Release|x86.Build.0 = Release|x86
-		{3A9651DF-88A9-4C0B-B0E0-9B1EBA3F829F}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3A9651DF-88A9-4C0B-B0E0-9B1EBA3F829F}.Debug|x86.Build.0 = Debug|Any CPU
-		{3A9651DF-88A9-4C0B-B0E0-9B1EBA3F829F}.Release|x86.ActiveCfg = Release|Any CPU
-		{3A9651DF-88A9-4C0B-B0E0-9B1EBA3F829F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
@@ -63,12 +57,16 @@ Global
 		$0.NameConventionPolicy = $5
 		$5.Rules = $6
 		$6.NamingRule = $7
-		$7.Name = Namespaces
-		$7.AffectedEntity = Namespace
+		$7.Name = Type Parameters
+		$7.AffectedEntity = TypeParameter
 		$7.VisibilityMask = VisibilityMask
 		$7.NamingStyle = PascalCase
 		$7.IncludeInstanceMembers = True
 		$7.IncludeStaticEntities = True
+		$7.RequiredPrefixes = $28
+		$28.String = T
+		$7.RequiredSuffixes = $29
+		$29.String = Exception
 		$6.NamingRule = $8
 		$8.Name = Types
 		$8.AffectedEntity = Class, Struct, Enum, Delegate
