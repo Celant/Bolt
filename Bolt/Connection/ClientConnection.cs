@@ -19,10 +19,7 @@ namespace Bolt.Connection
 {
     public class ClientConnection : GenericConnection
     {
-        public LoginQueue loginQueue;
         public ServerConnection CurrentServer;
-
-        public NATManager TranslationManager;
 
         private UpstreamBridge upstreamBridge;
         private Thread upstreamBridgeThread;
@@ -30,70 +27,88 @@ namespace Bolt.Connection
         private DownstreamBridge downstreamBridge;
         private Thread downstreamBridgeThread;
 
-        public ClientConnection(Socket socket, PacketInputStream input, NetworkStream output, LoginQueue loginQueue, NATManager translationManager)
-            : base(socket, input, output)
+        public ClientConnection (Socket socket, PacketInputStream input, NetworkStream output)
+            : base (socket, input, output)
         {
-            this.loginQueue = loginQueue;
-            username = this.loginQueue.playerInfo.Name;
-            this.TranslationManager = translationManager;
-            Console.WriteLine("[Bolt] [ClientConnection] User {0} has connected to slot {1}", username, loginQueue.playerInfo.PlayerID);
+            Console.WriteLine ("[Bolt] [ClientConnection] Received join request from player");
         }
 
-        public void Connect(IPEndPoint address) {
-            try {
-                ServerConnection NewServer = ServerConnection.connect(address, loginQueue);
-                TranslationManager.ServerPlayerID = NewServer.ServerPlayerID;
-                if (CurrentServer == null) {
-                    upstreamBridge = new UpstreamBridge(this);
-                    upstreamBridgeThread = new Thread(upstreamBridge.Run);
-                    upstreamBridgeThread.Name = "UpstreamBridge-" + TranslationManager.ProxyPlayerID;
-                    upstreamBridgeThread.Start();
+        public void Connect (IPEndPoint address)
+        {
+            
+            try
+            {
+                ServerConnection NewServer = ServerConnection.connect (address);
+                if (CurrentServer == null)
+                {
+                    upstreamBridge = new UpstreamBridge (this);
+                    upstreamBridgeThread = new Thread (upstreamBridge.Run);
+                    upstreamBridgeThread.Name = "UpstreamBridge-" + address.ToString () + "-" + NewServer.ServerPlayerID;
+                    upstreamBridgeThread.Start ();
                 }
-                if (downstreamBridge != null) {
-                    downstreamBridge.Interrupt();
-                    downstreamBridgeThread.Join();
+                if (downstreamBridge != null)
+                {
+                    downstreamBridge.Interrupt ();
+                    downstreamBridgeThread.Join ();
                 }
-                downstreamBridge = new DownstreamBridge(this);
-                downstreamBridgeThread = new Thread(downstreamBridge.Run);
-                downstreamBridgeThread.Name = "DownstreamBridge-" + TranslationManager.ProxyPlayerID;
-                CurrentServer = NewServer;
-                downstreamBridgeThread.Start();
 
-                ContinueConnecting2 continueConnecting2 = new ContinueConnecting2();
-                Console.WriteLine(continueConnecting2);
-                byte[] buf = continueConnecting2.ToArray();
-                CurrentServer.output.Write(buf, 0, buf.Length);
-            } catch (KickException e) {
-                Disconnect disconnectPacket = new Disconnect(e.Message);
-                byte[] buffer = disconnectPacket.ToArray();
-                output.Write(buffer, 0, buffer.Length);
+                downstreamBridge = new DownstreamBridge (this);
+                downstreamBridgeThread = new Thread (downstreamBridge.Run);
+                downstreamBridgeThread.Name = "DownstreamBridge-" + address.ToString () + "-" + NewServer.ServerPlayerID;
+                CurrentServer = NewServer;
+                downstreamBridgeThread.Start ();
+
+                ReRegister (CurrentServer.ServerPlayerID);
+
+                ContinueConnecting continueConnecting = new ContinueConnecting ();
+                continueConnecting.PlayerID = CurrentServer.ServerPlayerID;
+
+                Console.WriteLine (continueConnecting);
+                byte [] buf = continueConnecting.ToArray ();
+
+                CurrentServer.output.Write (buf, 0, buf.Length);
+
+            } 
+            catch (KickException e)
+            {
+                Disconnect disconnectPacket = new Disconnect (e.Message);
+                byte [] buffer = disconnectPacket.ToArray ();
+                output.Write (buffer, 0, buffer.Length);
             }
         }
 
-        public void Register(int slot) {
-            Bolt.Instance.Players[slot] = this;
+        public void Register (byte slot)
+        {
+            Bolt.Instance.Players.Add (this, slot);
         }
 
-        public void Destroy(string reason) {
+        public void ReRegister (byte slot)
+        {
+            Bolt.Instance.Players.Remove (this);
+            Bolt.Instance.Players.Add (this, slot);
+        }
+
+        public void Destroy (string reason)
+        {
             if (Bolt.Instance.IsRunning)
             {
-                Bolt.Instance.Players[TranslationManager.ProxyPlayerID] = null;
-                Console.WriteLine("[Bolt] [ClientConnection] Dropped player {0}: {1}", TranslationManager.ProxyPlayerID, reason);
+                Bolt.Instance.Players.Remove (this);
+                Console.WriteLine ("[Bolt] [ClientConnection] Dropped player {0}: {1}", CurrentServer.ServerPlayerID, reason);
             }
             if (upstreamBridge != null)
             {
-                upstreamBridge.Interrupt();
-                upstreamBridgeThread.Join();
+                upstreamBridge.Interrupt ();
+                upstreamBridgeThread.Join ();
             }
             if (downstreamBridge != null)
             {
-                downstreamBridge.Interrupt();
-                downstreamBridgeThread.Join();
+                downstreamBridge.Interrupt ();
+                downstreamBridgeThread.Join ();
             }
-            Disconnect(reason);
+            Disconnect (reason);
             if (CurrentServer != null)
             {
-                CurrentServer.Disconnect(reason);
+                CurrentServer.Disconnect (reason);
             }
         }
     }

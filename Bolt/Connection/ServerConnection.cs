@@ -24,8 +24,7 @@ namespace Bolt.Connection
             this.ServerPlayerID = serverPlayerID;
         }
 
-        // , LibMultiplicity.Packets.v1302.PlayerInfo playerInfo, LibMultiplicity.Packets.v1241.PlayerHP playerHp, LibMultiplicity.Packets.v1241.PlayerMana playerMana
-        public static ServerConnection connect(IPEndPoint address, LoginQueue loginQueue)
+        public static ServerConnection connect(IPEndPoint address)
         {
             try {
                 Console.WriteLine("[Bolt] Opening connection to target server");
@@ -55,34 +54,8 @@ namespace Bolt.Connection
                     }
                     ContinueConnecting continueConnecting = packet as ContinueConnecting;
                     serverPlayerID = continueConnecting.PlayerID;
+
                     Console.WriteLine("[Bolt] Target server accepted connection as Player {0}", serverPlayerID);
-                }
-
-                buffer = loginQueue.playerInfo.ToArray();
-                Console.WriteLine(loginQueue.playerInfo);
-                output.Write(buffer, 0, buffer.Length);
-
-                buffer = loginQueue.playerHP.ToArray();
-                Console.WriteLine(loginQueue.playerHP);
-                output.Write(buffer, 0, buffer.Length);
-
-                buffer = loginQueue.playerMana.ToArray();
-                Console.WriteLine(loginQueue.playerMana);
-                output.Write(buffer, 0, buffer.Length);
-
-                buffer = loginQueue.playerBuffs.ToArray();
-                Console.WriteLine(loginQueue.playerBuffs);
-                output.Write(buffer, 0, buffer.Length);
-
-                buffer = new byte[0];
-
-                foreach (PlayerInventorySlot slot in loginQueue.playerSlot)
-                {
-                    byte[] partbuffer = slot.ToArray();
-                    Array.Resize(ref buffer, buffer.Length + partbuffer.Length);
-                    Array.Copy(partbuffer, 0, buffer, buffer.Length - partbuffer.Length, partbuffer.Length);
-                    Console.WriteLine(slot);
-                    output.Write(buffer, 0, buffer.Length);
                 }
 
                 return new ServerConnection(socket, input, output, serverPlayerID);

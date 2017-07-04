@@ -17,12 +17,10 @@ namespace Bolt.Connection
     public class UpstreamBridge : ProcessThread
     {
         protected ClientConnection conn;
-        protected NATManager TranslationManager;
 
         public UpstreamBridge(ClientConnection parent)
         {
             this.conn = parent;
-            this.TranslationManager = conn.TranslationManager;
         }
 
         public override void Run() {
@@ -32,7 +30,6 @@ namespace Bolt.Connection
                     byte[] packet = conn.input.readPacket();
                     if (packet.Length >= 3)
                     {
-                        packet = TranslationManager.ProccessPacket(packet, TranslationType.Upstream);
                         using (MemoryStream ms = new MemoryStream(packet))
                         using (BinaryReader br = new BinaryReader(ms))
                         {

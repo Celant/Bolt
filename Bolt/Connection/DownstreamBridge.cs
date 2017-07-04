@@ -17,12 +17,10 @@ namespace Bolt.Connection
     public class DownstreamBridge : ProcessThread
     {
         protected ClientConnection ClientConnection;
-        protected NATManager TranslationManager;
 
         public DownstreamBridge(ClientConnection parent)
         {
             this.ClientConnection = parent;
-            this.TranslationManager = ClientConnection.TranslationManager;
         }
 
         public override void Run() {
@@ -32,7 +30,6 @@ namespace Bolt.Connection
                     byte[] packet = ClientConnection.CurrentServer.input.readPacket();
                     if (packet.Length >= 3)
                     {
-                        packet = TranslationManager.ProccessPacket(packet, TranslationType.Downstream);
                         using (MemoryStream ms = new MemoryStream(packet))
                         using (BinaryReader br = new BinaryReader(ms))
                         {

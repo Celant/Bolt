@@ -29,7 +29,7 @@ namespace Bolt.Connection
 
         public void Disconnect(string reason) {
             
-            Disconnect DisconnectPacket = new LibMultiplicity.Packets.v1241.Disconnect(reason);
+            Disconnect DisconnectPacket = new Disconnect (reason);
 
             try {
                 socket.Send(DisconnectPacket.ToArray());

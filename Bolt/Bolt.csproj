@@ -32,7 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Multiplicity.Packets">
-      <HintPath>..\packages\Multiplicity.Packets.1.2.5\lib\net45\Multiplicity.Packets.dll</HintPath>
+      <HintPath>..\packages\Multiplicity.Packets.1.2.6\lib\net45\Multiplicity.Packets.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -47,18 +47,11 @@
     <Compile Include="Protocol\LoginQueue.cs" />
     <Compile Include="Exception\KickException.cs" />
     <Compile Include="Connection\GenericConnection.cs" />
-    <Compile Include="Proxy\NATManager.cs" />
     <Compile Include="Connection\UpstreamBridge.cs" />
     <Compile Include="Connection\DownstreamBridge.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
-  <ItemGroup>
-    <ProjectReference Include="..\Multiplicity\LibMultiplicity\LibMultiplicity.csproj">
-      <Project>{3a9651df-88a9-4c0b-b0e0-9b1eba3f829f}</Project>
-      <Name>LibMultiplicity</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
