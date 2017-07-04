@@ -50,7 +50,7 @@ namespace Bolt.Connection
                     TerrariaPacket packet = TerrariaPacket.Deserialize(br);
                     if (packet.ID != 0x03)
                     {
-                        throw new ProtocolViolationException("Connection was refused to the target server");
+                        throw new KickException("Could not connect to upstream server");
                     }
                     ContinueConnecting continueConnecting = packet as ContinueConnecting;
                     serverPlayerID = continueConnecting.PlayerID;
