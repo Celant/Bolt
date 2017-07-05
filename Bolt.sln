@@ -18,11 +18,10 @@ Global
 		Policies = $0
 		$0.DotNetNamingPolicy = $1
 		$1.DirectoryNamespaceAssociation = PrefixedHierarchical
-		$1.ResourceNamePolicy = FileFormatDefault
 		$0.TextStylePolicy = $2
-		$2.inheritsSet = VisualStudio
-		$2.inheritsScope = text/plain
 		$2.scope = text/x-csharp
+		$2.FileWidth = 80
+		$2.TabsToSpaces = True
 		$0.CSharpFormattingPolicy = $3
 		$3.IndentSwitchBody = True
 		$3.IndentBlocksInsideExpressions = True
@@ -48,12 +47,9 @@ Global
 		$3.BeforeDelegateDeclarationParentheses = False
 		$3.NewParentheses = False
 		$3.SpacesBeforeBrackets = False
-		$3.inheritsSet = Mono
-		$3.inheritsScope = text/x-csharp
 		$3.scope = text/x-csharp
 		$0.StandardHeader = $4
 		$4.Text = @\n ${FileName}\n \n Author:\n      ${AuthorName} <${AuthorEmail}>\n\n Copyright (c) ${Year} ${CopyrightHolder}
-		$4.IncludeInNewFiles = True
 		$0.NameConventionPolicy = $5
 		$5.Rules = $6
 		$6.NamingRule = $7

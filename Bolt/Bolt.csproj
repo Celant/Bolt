@@ -47,8 +47,8 @@
     <Compile Include="Protocol\LoginQueue.cs" />
     <Compile Include="Exception\KickException.cs" />
     <Compile Include="Connection\GenericConnection.cs" />
-    <Compile Include="Connection\UpstreamBridge.cs" />
-    <Compile Include="Connection\DownstreamBridge.cs" />
+    <Compile Include="Connection\ClientBridge.cs" />
+    <Compile Include="Connection\ServerBridge.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

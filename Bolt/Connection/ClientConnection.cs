@@ -22,10 +22,10 @@ namespace Bolt.Connection
     {
         public ServerConnection CurrentServer;
 
-        private UpstreamBridge upstreamBridge;
+        private ClientBridge upstreamBridge;
         private Thread upstreamBridgeThread;
 
-        private DownstreamBridge downstreamBridge;
+        private ServerBridge downstreamBridge;
         private Thread downstreamBridgeThread;
 
         public ClientConnection (Socket socket, PacketInputStream input, NetworkStream output)
@@ -42,10 +42,9 @@ namespace Bolt.Connection
                 ServerConnection NewServer = ServerConnection.connect (address);
                 if (CurrentServer == null)
                 {
-                    upstreamBridge = new UpstreamBridge (this);
+                    upstreamBridge = new ClientBridge (this);
                     upstreamBridgeThread = new Thread (upstreamBridge.Run);
                     upstreamBridgeThread.Name = "UpstreamBridge-" + address.ToString () + "-" + NewServer.ServerPlayerID;
-                    upstreamBridgeThread.Start ();
                 }
                 if (downstreamBridge != null)
                 {
@@ -53,10 +52,11 @@ namespace Bolt.Connection
                     downstreamBridgeThread.Join ();
                 }
 
-                downstreamBridge = new DownstreamBridge (this);
+                downstreamBridge = new ServerBridge (this);
                 downstreamBridgeThread = new Thread (downstreamBridge.Run);
                 downstreamBridgeThread.Name = "DownstreamBridge-" + address.ToString () + "-" + NewServer.ServerPlayerID;
                 CurrentServer = NewServer;
+                upstreamBridgeThread.Start ();
                 downstreamBridgeThread.Start ();
 
                 ReRegister (CurrentServer.ServerPlayerID);

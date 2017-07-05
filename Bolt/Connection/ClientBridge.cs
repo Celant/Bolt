@@ -14,11 +14,11 @@ using System.Threading;
 
 namespace Bolt.Connection
 {
-    public class UpstreamBridge : ProcessThread
+    public class ClientBridge : ProcessThread
     {
         protected ClientConnection conn;
 
-        public UpstreamBridge(ClientConnection parent)
+        public ClientBridge(ClientConnection parent)
         {
             this.conn = parent;
         }
@@ -28,6 +28,8 @@ namespace Bolt.Connection
             {
                 try {
                     byte[] packet = conn.input.readPacket();
+                    conn.CurrentServer.output.Write (packet, 0, packet.Length);
+                    /*
                     if (packet.Length >= 3)
                     {
                         using (MemoryStream ms = new MemoryStream(packet))
@@ -39,6 +41,7 @@ namespace Bolt.Connection
 
                         conn.CurrentServer.output.Write(packet, 0, packet.Length);
                     }
+                    */
                 } catch (EndOfStreamException e) {
                     Console.WriteLine("[Bolt] [{0}] {1}", Thread.CurrentThread.Name, e.Message);
                     conn.Destroy("Reached end of stream");
