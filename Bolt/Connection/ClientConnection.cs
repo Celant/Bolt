@@ -69,7 +69,7 @@ namespace Bolt.Connection
                 Console.WriteLine ("[Bolt] [ClientConnection] Sending to client: " + continueConnecting);
                 byte [] buf = continueConnecting.ToArray ();
 
-                CurrentServer.output.Write (buf, 0, buf.Length);
+                output.Write (buf, 0, buf.Length);
 
             } 
             catch (KickException e)
