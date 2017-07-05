@@ -7,6 +7,7 @@
 //  Copyright (c) 2016 Celant
 using Bolt.Proxy;
 using Multiplicity.Packets;
+using Multiplicity.Packets.Models;
 using System;
 using System.IO;
 using System.Net.Sockets;
@@ -39,8 +40,13 @@ namespace Bolt.Connection
                         }
                         ClientConnection.output.Write(packet, 0, packet.Length);
                     } else {
-                        Disconnect disconnect = new Disconnect("Connection reset");
-                        ClientConnection.output.Write(disconnect.ToArray(), 0, disconnect.ToArray().Length);
+                        NetworkText disconnectReason = new NetworkText () {
+                            TextMode = 0,
+                            Text = "Connection reset"
+                        };
+                        Disconnect disconnectPacket = new Disconnect ();
+                        disconnectPacket.Reason = disconnectReason;
+                        ClientConnection.output.Write(disconnectPacket.ToArray(), 0, disconnectPacket.ToArray().Length);
                     }
                 } catch (EndOfStreamException e) {
                     Console.WriteLine("[Bolt] [{0}] {1}", Thread.CurrentThread.Name, e.Message);

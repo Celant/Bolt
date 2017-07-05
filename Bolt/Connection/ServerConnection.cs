@@ -38,7 +38,9 @@ namespace Bolt.Connection
 
                 byte serverPlayerID;
 
-                ConnectRequest connRequest = new ConnectRequest("Terraria156"); 
+                ConnectRequest connRequest = new ConnectRequest () {
+                    Version = "Terraria156"
+                };
                 buffer = connRequest.ToArray();
                 output.Write(buffer, 0, buffer.Length);
                 Console.WriteLine(connRequest);

@@ -6,6 +6,7 @@
 //
 //  Copyright (c) 2016 Celant
 using Multiplicity.Packets;
+using Multiplicity.Packets.Models;
 using System;
 using System.IO;
 using System.Net;
@@ -71,7 +72,13 @@ namespace Bolt.Connection
             } 
             catch (KickException e)
             {
-                Disconnect disconnectPacket = new Disconnect (e.Message);
+                NetworkText disconnectReason = new NetworkText ()  {
+                    TextMode = 0,
+                    Text = e.Message
+                };
+                Disconnect disconnectPacket = new Disconnect ();
+                disconnectPacket.Reason = disconnectReason;
+
                 byte [] buffer = disconnectPacket.ToArray ();
                 output.Write (buffer, 0, buffer.Length);
             }

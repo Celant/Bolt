@@ -32,7 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Multiplicity.Packets">
-      <HintPath>..\packages\Multiplicity.Packets.1.2.6\lib\net45\Multiplicity.Packets.dll</HintPath>
+      <HintPath>..\Multiplicity.Packets.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -52,7 +52,4 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
 </Project>

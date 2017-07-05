@@ -6,6 +6,7 @@
 //
 //  Copyright (c) 2016 Celant
 using Multiplicity.Packets;
+using Multiplicity.Packets.Models;
 using System;
 using System.IO;
 using System.Net;
@@ -28,11 +29,16 @@ namespace Bolt.Connection
         }
 
         public void Disconnect(string reason) {
-            
-            Disconnect DisconnectPacket = new Disconnect (reason);
+
+            NetworkText disconnectReason = new NetworkText () {
+                TextMode = 0,
+                Text = reason
+            };
+            Disconnect disconnectPacket = new Disconnect ();
+            disconnectPacket.Reason = disconnectReason;
 
             try {
-                socket.Send(DisconnectPacket.ToArray());
+                socket.Send(disconnectPacket.ToArray());
             } catch (SocketException e) {
                 //Console.Error.WriteLine(e.Message);
             } finally {
