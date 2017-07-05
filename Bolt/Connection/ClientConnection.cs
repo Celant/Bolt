@@ -52,17 +52,19 @@ namespace Bolt.Connection
                     downstreamBridgeThread.Join ();
                 }
 
+                CurrentServer = NewServer;
+
                 downstreamBridge = new ServerBridge (this);
                 downstreamBridgeThread = new Thread (downstreamBridge.Run);
                 downstreamBridgeThread.Name = "DownstreamBridge-" + address.ToString () + "-" + NewServer.ServerPlayerID;
-                CurrentServer = NewServer;
                 upstreamBridgeThread.Start ();
                 downstreamBridgeThread.Start ();
 
                 ReRegister (CurrentServer.ServerPlayerID);
 
-                ContinueConnecting continueConnecting = new ContinueConnecting ();
-                continueConnecting.PlayerID = CurrentServer.ServerPlayerID;
+                ContinueConnecting continueConnecting = new ContinueConnecting () {
+                    PlayerID = CurrentServer.ServerPlayerID
+                };
 
                 Console.WriteLine (continueConnecting);
                 byte [] buf = continueConnecting.ToArray ();

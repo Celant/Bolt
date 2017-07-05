@@ -47,7 +47,7 @@ namespace Bolt.Proxy
                 using (BinaryReader br = new BinaryReader(ms))
                 {
                     TerrariaPacket packet = TerrariaPacket.Deserialize(br);
-                    Console.WriteLine(packet);
+                    Console.WriteLine("[Bolt] [InitialHandler] " + packet);
                     if (ProcessPacket(packet))
                     {
                         break;
