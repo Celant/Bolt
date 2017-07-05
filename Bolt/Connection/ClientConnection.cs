@@ -44,7 +44,7 @@ namespace Bolt.Connection
                 {
                     upstreamBridge = new ClientBridge (this);
                     upstreamBridgeThread = new Thread (upstreamBridge.Run);
-                    upstreamBridgeThread.Name = "UpstreamBridge-" + address.ToString () + "-" + NewServer.ServerPlayerID;
+                    upstreamBridgeThread.Name = "UpstreamBridge-" + NewServer.ServerPlayerID;
                 }
                 if (downstreamBridge != null)
                 {
@@ -56,7 +56,7 @@ namespace Bolt.Connection
 
                 downstreamBridge = new ServerBridge (this);
                 downstreamBridgeThread = new Thread (downstreamBridge.Run);
-                downstreamBridgeThread.Name = "DownstreamBridge-" + address.ToString () + "-" + NewServer.ServerPlayerID;
+                downstreamBridgeThread.Name = "DownstreamBridge-" + NewServer.ServerPlayerID;
                 upstreamBridgeThread.Start ();
                 downstreamBridgeThread.Start ();
 
@@ -66,7 +66,7 @@ namespace Bolt.Connection
                     PlayerID = CurrentServer.ServerPlayerID
                 };
 
-                Console.WriteLine (continueConnecting);
+                Console.WriteLine ("[Bolt] [ClientConnection] Sending to client: " + continueConnecting);
                 byte [] buf = continueConnecting.ToArray ();
 
                 CurrentServer.output.Write (buf, 0, buf.Length);

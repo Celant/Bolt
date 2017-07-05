@@ -29,19 +29,20 @@ namespace Bolt.Connection
                 try {
                     byte[] packet = conn.input.readPacket();
                     conn.CurrentServer.output.Write (packet, 0, packet.Length);
-                    /*
+
                     if (packet.Length >= 3)
                     {
                         using (MemoryStream ms = new MemoryStream(packet))
                         using (BinaryReader br = new BinaryReader(ms))
                         {
                             TerrariaPacket deserializedPacket = TerrariaPacket.Deserialize(br);
-                            Console.WriteLine("[Bolt] [{0}] {1}", Thread.CurrentThread.Name, deserializedPacket);
+                            Console.WriteLine ("[Bolt] [{0}] {1} Received from client: ", Thread.CurrentThread.Name, deserializedPacket);
+                            Console.WriteLine ("[Bolt] [{0}] {1} Sent to server: ", Thread.CurrentThread.Name, deserializedPacket);
+                            conn.CurrentServer.output.Write (packet, 0, packet.Length);
                         }
 
-                        conn.CurrentServer.output.Write(packet, 0, packet.Length);
                     }
-                    */
+
                 } catch (EndOfStreamException e) {
                     Console.WriteLine("[Bolt] [{0}] {1}", Thread.CurrentThread.Name, e.Message);
                     conn.Destroy("Reached end of stream");

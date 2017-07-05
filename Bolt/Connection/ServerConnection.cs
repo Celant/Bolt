@@ -39,7 +39,7 @@ namespace Bolt.Connection
                 byte serverPlayerID;
 
                 ConnectRequest connRequest = new ConnectRequest () {
-                    Version = "Terraria156"
+                    Version = "Terraria194"
                 };
                 buffer = connRequest.ToArray();
                 output.Write(buffer, 0, buffer.Length);
@@ -55,6 +55,8 @@ namespace Bolt.Connection
                         throw new KickException("Could not connect to upstream server");
                     }
                     ContinueConnecting continueConnecting = packet as ContinueConnecting;
+                    Console.WriteLine ("[Bolt] [ServerConnection] Received from server: " + continueConnecting);
+
                     serverPlayerID = continueConnecting.PlayerID;
 
                     Console.WriteLine("[Bolt] Target server accepted connection as Player {0}", serverPlayerID);
