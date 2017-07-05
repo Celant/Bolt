@@ -36,8 +36,8 @@ namespace Bolt.Connection
                         using (BinaryReader br = new BinaryReader(ms))
                         {
                             TerrariaPacket deserializedPacket = TerrariaPacket.Deserialize(br);
-                            Console.WriteLine ("[Bolt] [{0}] {1} Received from client: ", Thread.CurrentThread.Name, deserializedPacket);
-                            Console.WriteLine ("[Bolt] [{0}] {1} Sent to server: ", Thread.CurrentThread.Name, deserializedPacket);
+                            Console.WriteLine ("[Bolt] [{0}] Received from client: {1}", Thread.CurrentThread.Name, deserializedPacket);
+                            Console.WriteLine ("[Bolt] [{0}] Sent to server: {1}", Thread.CurrentThread.Name, deserializedPacket);
                             conn.CurrentServer.output.Write (packet, 0, packet.Length);
                         }
 
