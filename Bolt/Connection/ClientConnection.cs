@@ -91,18 +91,18 @@ namespace Bolt.Connection
 
         public void Destroy (string reason)
         {
-            Console.WriteLine ("[Bolt] [ClientConnection] Dropped player {0}: {1}", CurrentServer.ServerPlayerID, reason);
+            Disconnect(reason);
+            if (CurrentServer != null)
+            {
+                CurrentServer.Disconnect(reason);
+            }
 
             upstreamBridge.Interrupt ();
             upstreamBridgeThread.Join ();
             downstreamBridge.Interrupt ();
             downstreamBridgeThread.Join ();
 
-            Disconnect (reason);
-            if (CurrentServer != null)
-            {
-                CurrentServer.Disconnect (reason);
-            }
+            Console.WriteLine("[Bolt] [ClientConnection] Dropped player {0}: {1}", CurrentServer.ServerPlayerID, reason);
         }
     }
 }

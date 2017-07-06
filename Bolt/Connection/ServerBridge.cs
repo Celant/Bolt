@@ -36,17 +36,26 @@ namespace Bolt.Connection
                         //ClientConnection.output.Write (packet, 0, packet.Length);
 
                         Console.WriteLine("[Bolt] [{0}] Received from server: {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet));
-                        Console.WriteLine("[Bolt] [{0}] Received from server len: {1}", Thread.CurrentThread.Name, packet.Length);
+                        //Console.WriteLine("[Bolt] [{0}] Received from server len: {1}", Thread.CurrentThread.Name, packet.Length);
                         using (MemoryStream ms = new MemoryStream(packet))
                         using (BinaryReader br = new BinaryReader(ms))
                         {
+                            TerrariaPacket deserializedPacket = TerrariaPacket.Deserialize(br);
+                            byte[] buffer = deserializedPacket.ToArray();
+                            if (buffer.Length != packet.Length)
+                            {
+                                Console.WriteLine("[Bolt] [{0}] Multiplicity length mismatch: {1} != {2}", Thread.CurrentThread.Name, buffer.Length, packet.Length);
+                                ClientConnection.output.Write(packet, 0, packet.Length);
+                            }
+
+                            /*
                             TerrariaPacket deserializedPacket = TerrariaPacket.Deserialize(br);
                             Console.WriteLine ("[Bolt] [{0}] Received from server: {1}", Thread.CurrentThread.Name, deserializedPacket);
                             Console.WriteLine("[Bolt] [{0}] Sent to client: {1}", Thread.CurrentThread.Name, deserializedPacket);
                             byte[] buffer = deserializedPacket.ToArray();
                             Console.WriteLine("[Bolt] [{0}] Sent to client: {1}", Thread.CurrentThread.Name, BitConverter.ToString(buffer));
                             Console.WriteLine("[Bolt] [{0}] Sent to client len: {1}", Thread.CurrentThread.Name, buffer.Length);
-                            ClientConnection.output.Write(buffer, 0, buffer.Length);
+                            ClientConnection.output.Write(buffer, 0, buffer.Length);*/
                         }
                     }
                     else
