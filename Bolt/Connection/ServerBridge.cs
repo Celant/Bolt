@@ -34,6 +34,8 @@ namespace Bolt.Connection
 
                     if (packet.Length >= 3)
                     {
+                        Console.WriteLine("[Bolt] [{0}] Received from server: {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet));
+                        Console.WriteLine("[Bolt] [{0}] Received from server len: {1}", Thread.CurrentThread.Name, packet.Length);
                         using (MemoryStream ms = new MemoryStream(packet))
                         using (BinaryReader br = new BinaryReader(ms))
                         {
@@ -41,6 +43,8 @@ namespace Bolt.Connection
                             Console.WriteLine ("[Bolt] [{0}] Received from server: {1}", Thread.CurrentThread.Name, deserializedPacket);
                             Console.WriteLine("[Bolt] [{0}] Sent to client: {1}", Thread.CurrentThread.Name, deserializedPacket);
                             byte[] buffer = deserializedPacket.ToArray();
+                            Console.WriteLine("[Bolt] [{0}] Sent to client: {1}", Thread.CurrentThread.Name, BitConverter.ToString(buffer));
+                            Console.WriteLine("[Bolt] [{0}] Sent to client len: {1}", Thread.CurrentThread.Name, buffer.Length);
                             ClientConnection.output.Write(buffer, 0, buffer.Length);
                         }
                     }

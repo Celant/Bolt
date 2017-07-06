@@ -1,4 +1,4 @@
-﻿//
+﻿﻿//
 //  UpstreamBridge.cs
 //
 //  Author:
