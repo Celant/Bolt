@@ -38,7 +38,8 @@ namespace Bolt.Connection
                             TerrariaPacket deserializedPacket = TerrariaPacket.Deserialize(br);
                             Console.WriteLine ("[Bolt] [{0}] Received from client: {1}", Thread.CurrentThread.Name, deserializedPacket);
                             Console.WriteLine ("[Bolt] [{0}] Sent to server: {1}", Thread.CurrentThread.Name, deserializedPacket);
-                            conn.CurrentServer.output.Write (deserializedPacket.ToArray(), 0, deserializedPacket.GetLength());
+                            byte[] buffer = deserializedPacket.ToArray();
+                            conn.CurrentServer.output.Write (buffer, 0, buffer.Length);
                         }
 
                     }
