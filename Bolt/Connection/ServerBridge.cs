@@ -30,6 +30,7 @@ namespace Bolt.Connection
                 try
                 {
                     byte[] packet = ClientConnection.CurrentServer.input.readPacket();
+                    BitConverter.ToString(packet);
                     //ClientConnection.output.Write (packet, 0, packet.Length);
 
                     if (packet.Length >= 3)
@@ -37,9 +38,11 @@ namespace Bolt.Connection
                         using (MemoryStream ms = new MemoryStream(packet))
                         using (BinaryReader br = new BinaryReader(ms))
                         {
+                            
                             TerrariaPacket deserializedPacket = TerrariaPacket.Deserialize(br);
-                            Console.WriteLine ("[Bolt] [{0}] Received from server: {1}", Thread.CurrentThread.Name, deserializedPacket);
-                            Console.WriteLine ("[Bolt] [{0}] Sent to client: {1}", Thread.CurrentThread.Name, deserializedPacket);
+                            BitConverter.ToString(deserializedPacket.ToArray());
+                            //Console.WriteLine ("[Bolt] [{0}] Received from server: {1}", Thread.CurrentThread.Name, deserializedPacket);
+                            //Console.WriteLine ("[Bolt] [{0}] Sent to client: {1}", Thread.CurrentThread.Name, deserializedPacket);
                             ClientConnection.output.Write (packet, 0, packet.Length);
                         }
                     }
