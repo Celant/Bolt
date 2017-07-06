@@ -1,4 +1,4 @@
-﻿//
+﻿﻿//
 //  PacketWrapper.cs
 //
 //  Author:
@@ -81,6 +81,8 @@ namespace Bolt
             Instance.Listener.socket.Close();
             Instance.ListenerThread.Interrupt();
             Instance.ListenerThread.Join();
+
+            Environment.Exit(0);
         }
 
         static bool ConsoleEventCallback(int eventType)
