@@ -52,7 +52,8 @@ namespace Bolt.Connection
                         };
                         Disconnect disconnectPacket = new Disconnect ();
                         disconnectPacket.Reason = disconnectReason;
-                        ClientConnection.output.Write(disconnectPacket.ToArray(), 0, disconnectPacket.ToArray().Length);
+                        byte[] buffer = disconnectPacket.ToArray();
+                        ClientConnection.output.Write(buffer, 0, buffer.Length);
                     }
                 }
                 catch (EndOfStreamException e) {

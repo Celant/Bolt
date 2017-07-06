@@ -93,12 +93,12 @@ namespace Bolt.Connection
         {
             Console.WriteLine ("[Bolt] [ClientConnection] Dropped player {0}: {1}", CurrentServer.ServerPlayerID, reason);
 
-            if (upstreamBridge != null)
+            if (upstreamBridgeThread.IsAlive)
             {
                 upstreamBridge.Interrupt ();
                 upstreamBridgeThread.Join ();
             }
-            if (downstreamBridge != null)
+            if (downstreamBridgeThread.IsAlive)
             {
                 downstreamBridge.Interrupt ();
                 downstreamBridgeThread.Join ();
