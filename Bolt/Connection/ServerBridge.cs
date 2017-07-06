@@ -30,10 +30,11 @@ namespace Bolt.Connection
                 try
                 {
                     byte[] packet = ClientConnection.CurrentServer.input.readPacket();
-                    //ClientConnection.output.Write (packet, 0, packet.Length);
 
                     if (packet.Length >= 3)
                     {
+                        //ClientConnection.output.Write (packet, 0, packet.Length);
+
                         Console.WriteLine("[Bolt] [{0}] Received from server: {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet));
                         Console.WriteLine("[Bolt] [{0}] Received from server len: {1}", Thread.CurrentThread.Name, packet.Length);
                         using (MemoryStream ms = new MemoryStream(packet))
