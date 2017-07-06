@@ -54,11 +54,13 @@ namespace Bolt.Connection
                 {
                     Console.WriteLine("[Bolt] [{0}] Error: {1}", Thread.CurrentThread.Name, e.Message);
                     conn.Destroy(e.Message);
+                    Interrupt();
                 }
                 catch (IOException e)
                 {
                     Console.WriteLine("[Bolt] [{0}] Error: {1}", Thread.CurrentThread.Name, e.Message);
                     conn.Destroy(e.Message);
+                    Interrupt();
                 }
             }
         }

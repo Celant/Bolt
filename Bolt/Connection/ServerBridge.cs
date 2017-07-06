@@ -59,10 +59,14 @@ namespace Bolt.Connection
                 }
                 catch (SocketException e) {
                     Console.WriteLine("[Bolt] [{0}] Error: {1}", Thread.CurrentThread.Name, e.Message);
+                    ClientConnection.Destroy(e.Message);
+                    Interrupt();
                 }
                 catch (IOException e)
                 {
                     Console.WriteLine("[Bolt] [{0}] Error: {1}", Thread.CurrentThread.Name, e.Message);
+                    ClientConnection.Destroy(e.Message);
+                    Interrupt();
                 }
             }
         }
