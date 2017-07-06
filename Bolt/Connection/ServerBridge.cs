@@ -30,6 +30,7 @@ namespace Bolt.Connection
                 try
                 {
                     byte[] packet = ClientConnection.CurrentServer.input.readPacket();
+                    byte[] packet2 = packet;
 
                     if (packet.Length >= 3)
                     {
@@ -37,14 +38,14 @@ namespace Bolt.Connection
 
                         Console.WriteLine("[Bolt] [{0}] Received from server: {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet));
                         //Console.WriteLine("[Bolt] [{0}] Received from server len: {1}", Thread.CurrentThread.Name, packet.Length);
-                        using (MemoryStream ms = new MemoryStream(packet))
+                        using (MemoryStream ms = new MemoryStream(packet2))
                         using (BinaryReader br = new BinaryReader(ms))
                         {
                             TerrariaPacket deserializedPacket = TerrariaPacket.Deserialize(br);
                             byte[] buffer = deserializedPacket.ToArray();
-                            if (buffer.Length != packet.Length)
+                            if (buffer.Length != packet2.Length)
                             {
-                                Console.WriteLine("[Bolt] [{0}] Multiplicity length mismatch: {1} != {2}", Thread.CurrentThread.Name, buffer.Length, packet.Length);
+                                Console.WriteLine("[Bolt] [{0}] Multiplicity length mismatch: {1} != {2}", Thread.CurrentThread.Name, buffer.Length, packet2.Length);
                                 ClientConnection.output.Write(packet, 0, packet.Length);
                             }
 
