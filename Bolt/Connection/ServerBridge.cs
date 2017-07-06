@@ -27,7 +27,8 @@ namespace Bolt.Connection
         public override void Run() {
             while (!Interrupted())
             {
-                try {
+                try
+                {
                     byte[] packet = ClientConnection.CurrentServer.input.readPacket();
                     if (packet.Length >= 3)
                     {
@@ -39,7 +40,9 @@ namespace Bolt.Connection
                             Console.WriteLine ("[Bolt] [{0}] Sent to client: {1}", Thread.CurrentThread.Name, deserializedPacket);
                             ClientConnection.output.Write (packet, 0, packet.Length);
                         }
-                    } else {
+                    }
+                    else
+                    {
                         NetworkText disconnectReason = new NetworkText () {
                             TextMode = 0,
                             Text = "Connection reset"
@@ -48,11 +51,17 @@ namespace Bolt.Connection
                         disconnectPacket.Reason = disconnectReason;
                         ClientConnection.output.Write(disconnectPacket.ToArray(), 0, disconnectPacket.ToArray().Length);
                     }
-                } catch (EndOfStreamException e) {
+                }
+                catch (EndOfStreamException e) {
                     Console.WriteLine("[Bolt] [{0}] {1}", Thread.CurrentThread.Name, e.Message);
                     ClientConnection.Destroy("Reached end of stream");
                     Interrupt();
-                } catch (SocketException e) {
+                }
+                catch (SocketException e) {
+                    Console.WriteLine("[Bolt] [{0}] Error: {1}", Thread.CurrentThread.Name, e.Message);
+                }
+                catch (IOException e)
+                {
                     Console.WriteLine("[Bolt] [{0}] Error: {1}", Thread.CurrentThread.Name, e.Message);
                 }
             }

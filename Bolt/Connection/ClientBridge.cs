@@ -43,12 +43,22 @@ namespace Bolt.Connection
 
                     }
 
-                } catch (EndOfStreamException e) {
+                }
+                catch (EndOfStreamException e)
+                {
                     Console.WriteLine("[Bolt] [{0}] {1}", Thread.CurrentThread.Name, e.Message);
                     conn.Destroy("Reached end of stream");
                     Interrupt();
-                } catch (SocketException e) {
+                }
+                catch (SocketException e)
+                {
                     Console.WriteLine("[Bolt] [{0}] Error: {1}", Thread.CurrentThread.Name, e.Message);
+                    conn.Destroy(e.Message);
+                }
+                catch (IOException e)
+                {
+                    Console.WriteLine("[Bolt] [{0}] Error: {1}", Thread.CurrentThread.Name, e.Message);
+                    conn.Destroy(e.Message);
                 }
             }
         }
