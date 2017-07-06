@@ -64,6 +64,8 @@ namespace Bolt.Protocol
                 Console.WriteLine("[Bolt] Packet is invalid");
             }
 
+            Console.WriteLine ("[Bolt] [PacketInputStream] {0}", packetHeader.type);
+
             if (packetHeader.length - kTerrariaPacketHeaderLength == 0)
             {
                 /*
