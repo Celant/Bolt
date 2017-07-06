@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Bolt.Connection;
@@ -33,6 +34,10 @@ namespace Bolt
             Instance = new Bolt();
             Console.WriteLine("Bolt v0.1 beginning initialisation");
 
+            Console.CancelKeyPress += delegate
+			{
+			    Stop();
+			};
 
             Instance.Start();
 
@@ -43,7 +48,7 @@ namespace Bolt
                 {
                     if (line.Equals("stop"))
                     {
-                        Instance.Stop();
+                        Stop();
                     }
                 }
             }
@@ -61,13 +66,29 @@ namespace Bolt
             ListenerThread.Start();
         }
 
-        public void Stop() {
-            IsRunning = false;
+        public static void Stop() {
+            Instance.IsRunning = false;
 
             Console.WriteLine("Closing network ports");
             Thread.Sleep(500);
-            Listener.socket.Close();
-            ListenerThread.Join();
+
+            foreach (KeyValuePair<ClientConnection, byte> pair in Instance.Players)
+            {
+                pair.Key.Destroy("Server is shutting down");
+            }
+
+            Instance.Listener.socket.Close();
+            Instance.ListenerThread.Interrupt();
+            Instance.ListenerThread.Join();
+        }
+
+        static bool ConsoleEventCallback(int eventType)
+        {
+            if (eventType == 2)
+            {
+                Stop();
+            }
+            return false;
         }
 	}
 }

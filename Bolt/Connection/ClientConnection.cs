@@ -99,11 +99,9 @@ namespace Bolt.Connection
 
         public void Destroy (string reason)
         {
-            if (Bolt.Instance.IsRunning)
-            {
-                Bolt.Instance.Players.Remove (this);
-                Console.WriteLine ("[Bolt] [ClientConnection] Dropped player {0}: {1}", CurrentServer.ServerPlayerID, reason);
-            }
+            Bolt.Instance.Players.Remove (this);
+            Console.WriteLine ("[Bolt] [ClientConnection] Dropped player {0}: {1}", CurrentServer.ServerPlayerID, reason);
+
             if (upstreamBridge != null)
             {
                 upstreamBridge.Interrupt ();

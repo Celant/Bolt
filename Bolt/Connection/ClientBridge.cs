@@ -28,7 +28,7 @@ namespace Bolt.Connection
             {
                 try {
                     byte[] packet = conn.input.readPacket();
-                    conn.CurrentServer.output.Write (packet, 0, packet.Length);
+                    //conn.CurrentServer.output.Write (packet, 0, packet.Length);
 
                     if (packet.Length >= 3)
                     {

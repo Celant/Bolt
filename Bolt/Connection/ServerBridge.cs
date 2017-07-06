@@ -30,6 +30,8 @@ namespace Bolt.Connection
                 try
                 {
                     byte[] packet = ClientConnection.CurrentServer.input.readPacket();
+                    //ClientConnection.output.Write (packet, 0, packet.Length);
+
                     if (packet.Length >= 3)
                     {
                         using (MemoryStream ms = new MemoryStream(packet))
