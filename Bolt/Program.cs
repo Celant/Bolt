@@ -23,7 +23,7 @@ namespace Bolt
 
         public volatile bool IsRunning;
 
-        public Dictionary<ClientConnection, byte> Players = new Dictionary<ClientConnection, byte> ();
+        public List<ClientConnection> Players = new List<ClientConnection> ();
 
         private ConnectionThread Listener;
 
@@ -69,12 +69,13 @@ namespace Bolt
         public static void Stop() {
             Instance.IsRunning = false;
 
-            Console.WriteLine("Closing network ports");
+            Console.WriteLine("[Bolt] Shutting down");
             Thread.Sleep(500);
 
-            foreach (KeyValuePair<ClientConnection, byte> pair in Instance.Players)
+            for (int i = Instance.Players.Count - 1; i >= 0; i--)
             {
-                pair.Key.Destroy("Server is shutting down");
+                Instance.Players[i].Destroy("Server is shutting down");
+                Instance.Players.RemoveAt(i);
             }
 
             Instance.Listener.socket.Close();

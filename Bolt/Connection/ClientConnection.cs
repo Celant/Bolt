@@ -44,7 +44,7 @@ namespace Bolt.Connection
                 {
                     upstreamBridge = new ClientBridge (this);
                     upstreamBridgeThread = new Thread (upstreamBridge.Run);
-                    upstreamBridgeThread.Name = "UpstreamBridge-" + NewServer.ServerPlayerID;
+                    upstreamBridgeThread.Name = "UpstreamBridge-" + Bolt.Instance.Players.IndexOf(this);
                 }
                 if (downstreamBridge != null)
                 {
@@ -56,11 +56,9 @@ namespace Bolt.Connection
 
                 downstreamBridge = new ServerBridge (this);
                 downstreamBridgeThread = new Thread (downstreamBridge.Run);
-                downstreamBridgeThread.Name = "DownstreamBridge-" + NewServer.ServerPlayerID;
+                downstreamBridgeThread.Name = "DownstreamBridge-" + Bolt.Instance.Players.IndexOf(this);
                 upstreamBridgeThread.Start ();
                 downstreamBridgeThread.Start ();
-
-                ReRegister (CurrentServer.ServerPlayerID);
 
                 ContinueConnecting continueConnecting = new ContinueConnecting () {
                     PlayerID = CurrentServer.ServerPlayerID
@@ -88,18 +86,11 @@ namespace Bolt.Connection
 
         public void Register (byte slot)
         {
-            Bolt.Instance.Players.Add (this, slot);
-        }
-
-        public void ReRegister (byte slot)
-        {
-            Bolt.Instance.Players.Remove (this);
-            Bolt.Instance.Players.Add (this, slot);
+            Bolt.Instance.Players.Add (this);
         }
 
         public void Destroy (string reason)
         {
-            Bolt.Instance.Players.Remove (this);
             Console.WriteLine ("[Bolt] [ClientConnection] Dropped player {0}: {1}", CurrentServer.ServerPlayerID, reason);
 
             if (upstreamBridge != null)
