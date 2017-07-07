@@ -49,8 +49,12 @@ namespace Bolt.Connection
                                     Console.WriteLine("[Bolt] [{0}] Multiplicity packet mismatch: {1} != {2}", Thread.CurrentThread.Name, buffer.Length, packet2.Length);
                                     Console.WriteLine("[Bolt] [{0}] server sent: {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet2));
                                     Console.WriteLine("[Bolt] [{0}] multiplicity: {1}", Thread.CurrentThread.Name, BitConverter.ToString(buffer));
-                                    ClientConnection.output.Write(buffer, 0, buffer.Length);
+                                    ClientConnection.output.Write(raw, 0, raw.Length);
                                     continue;
+                                }
+                                else
+                                {
+                                    ClientConnection.output.Write(buffer, 0, buffer.Length);
                                 }
                             }
                             else
