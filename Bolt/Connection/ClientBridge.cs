@@ -43,11 +43,11 @@ namespace Bolt.Connection
                         {
                             TerrariaPacket deserializedPacket = TerrariaPacket.Deserialize(br);
                             byte[] buffer = deserializedPacket.ToArray();
-                            if (buffer.Length != packet2.Length && deserializedPacket.PacketType != PacketTypes.LoadNetModule)
+                            if (buffer.Length != packet2.Length)
                             {
                                 Console.WriteLine("[Bolt] [{0}] Multiplicity length mismatch: {1} != {2}", Thread.CurrentThread.Name, buffer.Length, packet2.Length);
-                                Console.WriteLine("[Bolt] [{0}] Received from client: {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet2));
-                                Console.WriteLine("[Bolt] [{0}] Received from client: {1}", Thread.CurrentThread.Name, BitConverter.ToString(buffer));
+                                Console.WriteLine("[Bolt] [{0}] client sent : {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet2));
+                                Console.WriteLine("[Bolt] [{0}] multiplicity: {1}", Thread.CurrentThread.Name, BitConverter.ToString(buffer));
 
                                 //conn.CurrentServer.output.Write(packet, 0, packet.Length);
                             }

@@ -46,9 +46,13 @@ namespace Bolt
                 string line = Console.ReadLine();
                 if (line != null)
                 {
-                    if (line.Equals("stop"))
+                    switch (line)
                     {
-                        Stop();
+                        case "stop":
+                            Stop();
+                            break;
+                        case "connect":
+                            break;
                     }
                 }
             }
