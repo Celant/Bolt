@@ -52,6 +52,7 @@ namespace Bolt
                             Stop();
                             break;
                         case "connect":
+                            SwitchServer();
                             break;
                     }
                 }
@@ -87,6 +88,13 @@ namespace Bolt
             Instance.ListenerThread.Join();
 
             Environment.Exit(0);
+        }
+
+        public static void SwitchServer() {
+            for (int i = 0; i < Instance.Players.Count; i++)
+            {
+                Instance.Players[i].Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 7877));
+            }
         }
 
         static bool ConsoleEventCallback(int eventType)
