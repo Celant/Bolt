@@ -110,10 +110,17 @@ namespace Bolt.Connection
                     PlayerID = CurrentServer.ServerPlayerID
                 };
 
+                TeleportationPotion teleportationPotion = new TeleportationPotion();
+
                 Console.WriteLine ("[Bolt] [ClientConnection] Sending to client: " + continueConnecting);
                 byte [] buf = continueConnecting.ToArray ();
 
-                output.Write (buf, 0, buf.Length);
+                output.Write(buf, 0, buf.Length);
+
+                Console.WriteLine("[Bolt] [ClientConnection] Sending to client: " + teleportationPotion);
+                buf = teleportationPotion.ToArray();
+
+                output.Write(buf, 0, buf.Length);
 
             } 
             catch (KickException e)
