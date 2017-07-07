@@ -54,11 +54,14 @@ namespace Bolt.Connection
 
                 CurrentServer = NewServer;
 
-                downstreamBridge = new ServerBridge (this);
-                downstreamBridgeThread = new Thread (downstreamBridge.Run);
-                downstreamBridgeThread.Name = "DownstreamBridge-" + Bolt.Instance.Players.IndexOf(this);
-                upstreamBridgeThread.Start ();
-                downstreamBridgeThread.Start ();
+                if (upstreamBridge == null)
+                {
+                    downstreamBridge = new ServerBridge(this);
+                    downstreamBridgeThread = new Thread(downstreamBridge.Run);
+                    downstreamBridgeThread.Name = "DownstreamBridge-" + Bolt.Instance.Players.IndexOf(this);
+                    upstreamBridgeThread.Start();
+                }
+                downstreamBridgeThread.Start();
 
                 ContinueConnecting continueConnecting = new ContinueConnecting () {
                     PlayerID = CurrentServer.ServerPlayerID
