@@ -24,8 +24,6 @@ namespace Bolt.Proxy
         private PacketInputStream input;
         private NetworkStream output;
 
-        protected LoginQueue loginQueue = new LoginQueue();
-
         public InitialHandler(Socket socket)
         {
             this.socket = socket;

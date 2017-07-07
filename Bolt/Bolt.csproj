@@ -44,11 +44,11 @@
     <Compile Include="ProcessThread.cs" />
     <Compile Include="Proxy\InitialHandler.cs" />
     <Compile Include="Protocol\PacketInputStream.cs" />
-    <Compile Include="Protocol\LoginQueue.cs" />
     <Compile Include="Exception\KickException.cs" />
     <Compile Include="Connection\GenericConnection.cs" />
     <Compile Include="Connection\ClientBridge.cs" />
     <Compile Include="Connection\ServerBridge.cs" />
+    <Compile Include="Protocol\PacketIntercept.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

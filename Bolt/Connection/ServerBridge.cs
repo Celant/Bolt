@@ -5,9 +5,9 @@
 //       Josh Harris <celant@celantinteractive.com>
 //
 //  Copyright (c) 2016 Celant
+using Bolt.Protocol;
 using Bolt.Proxy;
 using Multiplicity.Packets;
-using Multiplicity.Packets.Models;
 using System;
 using System.IO;
 using System.Linq;
@@ -36,34 +36,7 @@ namespace Bolt.Connection
 
                     if (packet2.Length >= 3)
                     {
-                        using (MemoryStream ms = new MemoryStream(packet2))
-                        using (BinaryReader br = new BinaryReader(ms))
-                        {
-                            TerrariaPacket deserializedPacket = TerrariaPacket.Deserialize(br);
-                            byte[] buffer = deserializedPacket.ToArray();
-
-                            if (deserializedPacket.PacketType != PacketTypes.LoadNetModule)
-                            {
-                                if (!buffer.SequenceEqual(packet2))
-                                {
-                                    Console.WriteLine("[Bolt] [{0}] Multiplicity packet mismatch: {1} != {2}", Thread.CurrentThread.Name, buffer.Length, packet2.Length);
-                                    Console.WriteLine("[Bolt] [{0}] server sent: {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet2));
-                                    Console.WriteLine("[Bolt] [{0}] multiplicity: {1}", Thread.CurrentThread.Name, BitConverter.ToString(buffer));
-                                    ClientConnection.output.Write(raw, 0, raw.Length);
-                                    continue;
-                                }
-                                else
-                                {
-                                    Console.WriteLine("[Bolt] [{0}] server sent: {1}", Thread.CurrentThread.Name, deserializedPacket);
-                                    ClientConnection.output.Write(buffer, 0, buffer.Length);
-                                }
-                            }
-                            else
-                            {
-                                ClientConnection.output.Write(raw, 0, raw.Length);
-                                continue;
-                            }
-                        }
+                        PacketIntercept.PerformIntercept(raw, ClientConnection.output, ClientConnection.CurrentServer.output, false);
                     }
                 }
                 catch (EndOfStreamException e) {

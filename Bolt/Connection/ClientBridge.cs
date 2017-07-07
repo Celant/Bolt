@@ -6,6 +6,7 @@
 //
 //  Copyright (c) 2016 Celant
 using Bolt.Proxy;
+using Bolt.Protocol;
 using Multiplicity.Packets;
 using System;
 using System.IO;
@@ -35,34 +36,8 @@ namespace Bolt.Connection
 
                     if (packet2.Length >= 3)
                     {
-                        using (MemoryStream ms = new MemoryStream(packet2))
-                        using (BinaryReader br = new BinaryReader(ms))
-                        {
-                            TerrariaPacket deserializedPacket = TerrariaPacket.Deserialize(br);
-                            byte[] buffer = deserializedPacket.ToArray();
+                        PacketIntercept.PerformIntercept(raw, conn.CurrentServer.output, conn.output, true);
 
-                            if (deserializedPacket.PacketType != PacketTypes.LoadNetModule)
-                            {
-                                if (!buffer.SequenceEqual(packet2))
-                                {
-                                    Console.WriteLine("[Bolt] [{0}] Multiplicity packet mismatch: {1} != {2}", Thread.CurrentThread.Name, buffer.Length, packet2.Length);
-                                    Console.WriteLine("[Bolt] [{0}] client sent: {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet2));
-                                    Console.WriteLine("[Bolt] [{0}] multiplicity: {1}", Thread.CurrentThread.Name, BitConverter.ToString(buffer));
-                                    conn.CurrentServer.output.Write(raw, 0, raw.Length);
-                                    continue;
-                                }
-                                else
-                                {
-                                    Console.WriteLine("[Bolt] [{0}] client sent: {1}", Thread.CurrentThread.Name, deserializedPacket);
-                                    conn.CurrentServer.output.Write(buffer, 0, buffer.Length);
-                                }
-                            }
-                            else
-                            {
-                                conn.CurrentServer.output.Write(raw, 0, raw.Length);
-                                continue;
-                            }
-                        }
                     }
 
                 }
