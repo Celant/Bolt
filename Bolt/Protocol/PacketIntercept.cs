@@ -67,6 +67,7 @@ namespace Bolt.Protocol
                             };
 
                             byte[] buffer = getSection.ToArray();
+                            Console.WriteLine("[Bolt] [{0}] forged from client: {1}", Thread.CurrentThread.Name, getSection);
                             input.Write(buffer, 0, buffer.Length);
 
                             break;
