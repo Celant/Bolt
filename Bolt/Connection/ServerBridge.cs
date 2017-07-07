@@ -43,9 +43,9 @@ namespace Bolt.Connection
 
                             if (deserializedPacket.PacketType != PacketTypes.LoadNetModule)
                             {
-                                if (buffer.Length != packet2.Length)
+                                if (buffer != packet2)
                                 {
-                                    Console.WriteLine("[Bolt] [{0}] Multiplicity length mismatch: {1} != {2}", Thread.CurrentThread.Name, buffer.Length, packet2.Length);
+                                    Console.WriteLine("[Bolt] [{0}] Multiplicity packet mismatch: {1} != {2}", Thread.CurrentThread.Name, buffer.Length, packet2.Length);
                                     Console.WriteLine("[Bolt] [{0}] server sent: {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet2));
                                     Console.WriteLine("[Bolt] [{0}] multiplicity: {1}", Thread.CurrentThread.Name, BitConverter.ToString(buffer));
                                     ClientConnection.output.Write(buffer, 0, buffer.Length);
