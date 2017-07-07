@@ -37,7 +37,7 @@ namespace Bolt.Connection
                     {
                         ClientConnection.output.Write (packet, 0, packet.Length);
 
-                        Console.WriteLine("[Bolt] [{0}] Received from server: {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet));
+                        //Console.WriteLine("[Bolt] [{0}] Received from server: {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet));
                         //Console.WriteLine("[Bolt] [{0}] Received from server len: {1}", Thread.CurrentThread.Name, packet.Length);
                         using (MemoryStream ms = new MemoryStream(packet2))
                         using (BinaryReader br = new BinaryReader(ms))
@@ -47,6 +47,8 @@ namespace Bolt.Connection
                             if (buffer.Length != packet2.Length)
                             {
                                 Console.WriteLine("[Bolt] [{0}] Multiplicity length mismatch: {1} != {2}", Thread.CurrentThread.Name, buffer.Length, packet2.Length);
+                                Console.WriteLine("[Bolt] [{0}] Received from server: {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet2));
+                                Console.WriteLine("[Bolt] [{0}] Received from server: {1}", Thread.CurrentThread.Name, BitConverter.ToString(buffer));
                                 //ClientConnection.output.Write(packet, 0, packet.Length);
                             }
 
