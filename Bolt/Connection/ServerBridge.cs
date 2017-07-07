@@ -30,11 +30,12 @@ namespace Bolt.Connection
                 try
                 {
                     byte[] packet = ClientConnection.CurrentServer.input.readPacket();
-                    byte[] packet2 = packet;
+                    byte[] packet2 = new byte[packet.Length];
+                    packet.CopyTo(packet2, 0);
 
                     if (packet.Length >= 3)
                     {
-                        //ClientConnection.output.Write (packet, 0, packet.Length);
+                        ClientConnection.output.Write (packet, 0, packet.Length);
 
                         Console.WriteLine("[Bolt] [{0}] Received from server: {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet));
                         //Console.WriteLine("[Bolt] [{0}] Received from server len: {1}", Thread.CurrentThread.Name, packet.Length);
@@ -46,7 +47,7 @@ namespace Bolt.Connection
                             if (buffer.Length != packet2.Length)
                             {
                                 Console.WriteLine("[Bolt] [{0}] Multiplicity length mismatch: {1} != {2}", Thread.CurrentThread.Name, buffer.Length, packet2.Length);
-                                ClientConnection.output.Write(packet, 0, packet.Length);
+                                //ClientConnection.output.Write(packet, 0, packet.Length);
                             }
 
                             /*
