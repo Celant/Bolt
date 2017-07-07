@@ -9,6 +9,7 @@ using Bolt.Proxy;
 using Multiplicity.Packets;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 
@@ -42,7 +43,7 @@ namespace Bolt.Connection
 
                             if (deserializedPacket.PacketType != PacketTypes.LoadNetModule)
                             {
-                                if (buffer != packet2)
+                                if (!buffer.SequenceEqual(packet2))
                                 {
                                     Console.WriteLine("[Bolt] [{0}] Multiplicity packet mismatch: {1} != {2}", Thread.CurrentThread.Name, buffer.Length, packet2.Length);
                                     Console.WriteLine("[Bolt] [{0}] client sent: {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet2));
