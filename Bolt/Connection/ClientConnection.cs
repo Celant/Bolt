@@ -34,26 +34,72 @@ namespace Bolt.Connection
             Console.WriteLine ("[Bolt] [ClientConnection] Received join request from player");
         }
 
+        private void Start(IPEndPoint address)
+        {
+            try
+            {
+                ServerConnection Server = ServerConnection.connect(address);
+                CurrentServer = Server;
+                upstreamBridge = new ClientBridge(this);
+                upstreamBridgeThread = new Thread(upstreamBridge.Run);
+                upstreamBridgeThread.Name = "UpstreamBridge-" + Bolt.Instance.Players.IndexOf(this);
+                upstreamBridgeThread.Start();
+
+                downstreamBridge = new ServerBridge(this);
+                downstreamBridgeThread = new Thread(downstreamBridge.Run);
+                downstreamBridgeThread.Name = "DownstreamBridge-" + Bolt.Instance.Players.IndexOf(this);
+                downstreamBridgeThread.Start();
+
+                ContinueConnecting continueConnecting = new ContinueConnecting()
+                {
+                    PlayerID = CurrentServer.ServerPlayerID
+                };
+
+                Console.WriteLine("[Bolt] [ClientConnection] Sending to client: " + continueConnecting);
+                byte[] buf = continueConnecting.ToArray();
+
+                output.Write(buf, 0, buf.Length);
+
+            }
+            catch (KickException e)
+            {
+                NetworkText disconnectReason = new NetworkText()
+                {
+                    TextMode = 0,
+                    Text = e.Message
+                };
+                Disconnect disconnectPacket = new Disconnect();
+                disconnectPacket.Reason = disconnectReason;
+
+                byte[] buffer = disconnectPacket.ToArray();
+                output.Write(buffer, 0, buffer.Length);
+            }
+        }
+
         public void Connect (IPEndPoint address)
         {
             
             try
             {
-                ServerConnection NewServer = ServerConnection.connect (address);
                 if (CurrentServer == null)
                 {
-                    upstreamBridge = new ClientBridge (this);
-                    upstreamBridgeThread = new Thread (upstreamBridge.Run);
-                    upstreamBridgeThread.Name = "UpstreamBridge-" + Bolt.Instance.Players.IndexOf(this);
-                    upstreamBridgeThread.Start();
-                }
-                if (downstreamBridge != null)
-                {
-                    downstreamBridge.Interrupt ();
-                    downstreamBridgeThread.Join ();
+                    Start(address);
+                    return;
                 }
 
+                upstreamBridge.Interrupt();
+                upstreamBridgeThread.Join();
+                downstreamBridge.Interrupt();
+                downstreamBridgeThread.Join();
+
+                ServerConnection NewServer = ServerConnection.connect (address);
+
                 CurrentServer = NewServer;
+
+                upstreamBridge = new ClientBridge (this);
+                upstreamBridgeThread = new Thread (upstreamBridge.Run);
+                upstreamBridgeThread.Name = "UpstreamBridge-" + Bolt.Instance.Players.IndexOf(this);
+                upstreamBridgeThread.Start();
 
                 downstreamBridge = new ServerBridge(this);
                 downstreamBridgeThread = new Thread(downstreamBridge.Run);
