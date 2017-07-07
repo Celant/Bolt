@@ -54,6 +54,7 @@ namespace Bolt.Connection
                                 }
                                 else
                                 {
+                                    Console.WriteLine("[Bolt] [{0}] server sent: {1}", Thread.CurrentThread.Name, deserializedPacket);
                                     ClientConnection.output.Write(buffer, 0, buffer.Length);
                                 }
                             }

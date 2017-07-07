@@ -53,6 +53,7 @@ namespace Bolt.Connection
                                 }
                                 else
                                 {
+                                    Console.WriteLine("[Bolt] [{0}] client sent: {1}", Thread.CurrentThread.Name, deserializedPacket);
                                     conn.CurrentServer.output.Write(buffer, 0, buffer.Length);
                                 }
                             }
