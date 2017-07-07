@@ -60,6 +60,15 @@ namespace Bolt.Protocol
                     switch (deserializedPacket.PacketType)
                     {
                         case PacketTypes.WorldInfo:
+                            GetSection getSection = new GetSection()
+                            {
+                                X = -1,
+                                Y = -1
+                            };
+
+                            byte[] buffer = getSection.ToArray();
+                            input.Write(buffer, 0, buffer.Length);
+
                             break;
                         default:
                             break;
