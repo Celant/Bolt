@@ -45,6 +45,7 @@ namespace Bolt.Connection
                     upstreamBridge = new ClientBridge (this);
                     upstreamBridgeThread = new Thread (upstreamBridge.Run);
                     upstreamBridgeThread.Name = "UpstreamBridge-" + Bolt.Instance.Players.IndexOf(this);
+                    upstreamBridgeThread.Start();
                 }
                 if (downstreamBridge != null)
                 {
@@ -54,13 +55,9 @@ namespace Bolt.Connection
 
                 CurrentServer = NewServer;
 
-                if (upstreamBridge == null)
-                {
-                    downstreamBridge = new ServerBridge(this);
-                    downstreamBridgeThread = new Thread(downstreamBridge.Run);
-                    downstreamBridgeThread.Name = "DownstreamBridge-" + Bolt.Instance.Players.IndexOf(this);
-                    upstreamBridgeThread.Start();
-                }
+                downstreamBridge = new ServerBridge(this);
+                downstreamBridgeThread = new Thread(downstreamBridge.Run);
+                downstreamBridgeThread.Name = "DownstreamBridge-" + Bolt.Instance.Players.IndexOf(this);
                 downstreamBridgeThread.Start();
 
                 ContinueConnecting continueConnecting = new ContinueConnecting () {
