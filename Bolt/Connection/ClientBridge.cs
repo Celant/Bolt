@@ -26,42 +26,37 @@ namespace Bolt.Connection
         public override void Run() {
             while (!Interrupted())
             {
-                try {
-                    byte[] packet = conn.input.readPacket();
-                    byte[] packet2 = new byte[packet.Length];
-                    packet.CopyTo(packet2, 0);
+                try
+                {
+                    byte[] raw = conn.input.readPacket();
+                    byte[] packet2 = new byte[raw.Length];
+                    raw.CopyTo(packet2, 0);
 
-                    if (packet.Length >= 3)
+                    if (packet2.Length >= 3)
                     {
-                        conn.CurrentServer.output.Write (packet, 0, packet.Length);
-                        //continue;
-
-                        //Console.WriteLine ("[Bolt] [{0}] Received from client: {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet));
-                        //Console.WriteLine ("[Bolt] [{0}] Received from client len: {1}", Thread.CurrentThread.Name, packet.Length);
                         using (MemoryStream ms = new MemoryStream(packet2))
                         using (BinaryReader br = new BinaryReader(ms))
                         {
                             TerrariaPacket deserializedPacket = TerrariaPacket.Deserialize(br);
                             byte[] buffer = deserializedPacket.ToArray();
-                            if (buffer.Length != packet2.Length)
+
+                            if (deserializedPacket.PacketType != PacketTypes.LoadNetModule)
                             {
-                                Console.WriteLine("[Bolt] [{0}] Multiplicity length mismatch: {1} != {2}", Thread.CurrentThread.Name, buffer.Length, packet2.Length);
-                                Console.WriteLine("[Bolt] [{0}] client sent : {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet2));
-                                Console.WriteLine("[Bolt] [{0}] multiplicity: {1}", Thread.CurrentThread.Name, BitConverter.ToString(buffer));
-
-                                //conn.CurrentServer.output.Write(packet, 0, packet.Length);
+                                if (buffer.Length != packet2.Length)
+                                {
+                                    Console.WriteLine("[Bolt] [{0}] Multiplicity length mismatch: {1} != {2}", Thread.CurrentThread.Name, buffer.Length, packet2.Length);
+                                    Console.WriteLine("[Bolt] [{0}] client sent: {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet2));
+                                    Console.WriteLine("[Bolt] [{0}] multiplicity: {1}", Thread.CurrentThread.Name, BitConverter.ToString(buffer));
+                                    conn.CurrentServer.output.Write(buffer, 0, buffer.Length);
+                                    continue;
+                                }
                             }
-
-                            /*
-                            TerrariaPacket deserializedPacket = TerrariaPacket.Deserialize(br);
-                            Console.WriteLine ("[Bolt] [{0}] Received from client: {1}", Thread.CurrentThread.Name, deserializedPacket);
-                            Console.WriteLine ("[Bolt] [{0}] Sent to server: {1}", Thread.CurrentThread.Name, deserializedPacket);
-                            byte[] buffer = deserializedPacket.ToArray();
-                            Console.WriteLine ("[Bolt] [{0}] Sent to server: {1}", Thread.CurrentThread.Name, BitConverter.ToString(buffer));
-                            Console.WriteLine ("[Bolt] [{0}] Sent to server len: {1}", Thread.CurrentThread.Name, buffer.Length);
-                            conn.CurrentServer.output.Write (buffer, 0, buffer.Length); */
+                            else
+                            {
+                                conn.CurrentServer.output.Write(raw, 0, raw.Length);
+                                continue;
+                            }
                         }
-
                     }
 
                 }

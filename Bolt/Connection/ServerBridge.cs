@@ -29,49 +29,35 @@ namespace Bolt.Connection
             {
                 try
                 {
-                    byte[] packet = ClientConnection.CurrentServer.input.readPacket();
-                    byte[] packet2 = new byte[packet.Length];
-                    packet.CopyTo(packet2, 0);
+                    byte[] raw = ClientConnection.CurrentServer.input.readPacket();
+                    byte[] packet2 = new byte[raw.Length];
+                    raw.CopyTo(packet2, 0);
 
-                    if (packet.Length >= 3)
+                    if (packet2.Length >= 3)
                     {
-                        ClientConnection.output.Write (packet, 0, packet.Length);
-
-                        //Console.WriteLine("[Bolt] [{0}] Received from server: {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet));
-                        //Console.WriteLine("[Bolt] [{0}] Received from server len: {1}", Thread.CurrentThread.Name, packet.Length);
                         using (MemoryStream ms = new MemoryStream(packet2))
                         using (BinaryReader br = new BinaryReader(ms))
                         {
                             TerrariaPacket deserializedPacket = TerrariaPacket.Deserialize(br);
                             byte[] buffer = deserializedPacket.ToArray();
-                            if (buffer.Length != packet2.Length)
-                            {
-                                Console.WriteLine("[Bolt] [{0}] Multiplicity length mismatch: {1} != {2}", Thread.CurrentThread.Name, buffer.Length, packet2.Length);
-                                Console.WriteLine("[Bolt] [{0}] server sent : {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet2));
-                                Console.WriteLine("[Bolt] [{0}] multiplicity: {1}", Thread.CurrentThread.Name, BitConverter.ToString(buffer));
-                                //ClientConnection.output.Write(packet, 0, packet.Length);
-                            }
 
-                            /*
-                            TerrariaPacket deserializedPacket = TerrariaPacket.Deserialize(br);
-                            Console.WriteLine ("[Bolt] [{0}] Received from server: {1}", Thread.CurrentThread.Name, deserializedPacket);
-                            Console.WriteLine("[Bolt] [{0}] Sent to client: {1}", Thread.CurrentThread.Name, deserializedPacket);
-                            byte[] buffer = deserializedPacket.ToArray();
-                            Console.WriteLine("[Bolt] [{0}] Sent to client: {1}", Thread.CurrentThread.Name, BitConverter.ToString(buffer));
-                            Console.WriteLine("[Bolt] [{0}] Sent to client len: {1}", Thread.CurrentThread.Name, buffer.Length);
-                            ClientConnection.output.Write(buffer, 0, buffer.Length);*/
+                            if (deserializedPacket.PacketType != PacketTypes.LoadNetModule)
+                            {
+                                if (buffer.Length != packet2.Length)
+                                {
+                                    Console.WriteLine("[Bolt] [{0}] Multiplicity length mismatch: {1} != {2}", Thread.CurrentThread.Name, buffer.Length, packet2.Length);
+                                    Console.WriteLine("[Bolt] [{0}] server sent: {1}", Thread.CurrentThread.Name, BitConverter.ToString(packet2));
+                                    Console.WriteLine("[Bolt] [{0}] multiplicity: {1}", Thread.CurrentThread.Name, BitConverter.ToString(buffer));
+                                    ClientConnection.output.Write(buffer, 0, buffer.Length);
+                                    continue;
+                                }
+                            }
+                            else
+                            {
+                                ClientConnection.output.Write(raw, 0, raw.Length);
+                                continue;
+                            }
                         }
-                    }
-                    else
-                    {
-                        NetworkText disconnectReason = new NetworkText () {
-                            TextMode = 0,
-                            Text = "Connection reset"
-                        };
-                        Disconnect disconnectPacket = new Disconnect ();
-                        disconnectPacket.Reason = disconnectReason;
-                        byte[] buffer = disconnectPacket.ToArray();
-                        ClientConnection.output.Write(buffer, 0, buffer.Length);
                     }
                 }
                 catch (EndOfStreamException e) {
