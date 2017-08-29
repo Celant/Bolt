@@ -25,6 +25,8 @@ namespace Bolt
 
         public List<ClientConnection> Players = new List<ClientConnection> ();
 
+        public bool Debug = false;
+
         private ConnectionThread Listener;
 
         private Thread ListenerThread;
@@ -38,6 +40,19 @@ namespace Bolt
 			{
 			    Stop();
 			};
+
+            for (int i = 0; i < args.Length; i++)
+            {
+                switch (args[i])
+                {
+                    case "--debug":
+                        Instance.Debug = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
 
             Instance.Start();
 

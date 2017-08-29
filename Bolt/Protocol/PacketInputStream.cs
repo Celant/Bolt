@@ -51,7 +51,9 @@ namespace Bolt.Protocol
 
             int bytesRead = 0;
 
+            Console.WriteLine("A");
             bytesRead = stream.Read(stagingBuffer, 0, kTerrariaPacketHeaderLength);
+            Console.WriteLine("B");
             if (bytesRead != kTerrariaPacketHeaderLength)
             {
                 //throw new System.Exception("Failed to read packet header from stream");
